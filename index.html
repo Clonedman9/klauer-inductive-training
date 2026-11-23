@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>比较之间 · 克劳尔归纳训练</title>
-<style>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#245a49"><meta name="description" content="依据克劳尔公开理论与样题机制重做的120题十课归纳训练：自行发现、定位修复、反向查验与方法依据。"><title>比较之间 · 克劳尔方法重做版 v2</title><style>
+
 :root{--bg:#f4f5ef;--paper:#fffefb;--ink:#243b35;--muted:#708079;--line:#dde4db;--green:#245a49;--pale:#e9f0e6;--orange:#c86843;--soft:#fcf0e6;--red:#ac473d;--radius:22px}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 system-ui,-apple-system,"Microsoft YaHei",sans-serif}
@@ -203,267 +201,570 @@ textarea{resize:vertical;min-height:66px;line-height:1.6;font-size:13px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}
 }
 
-</style>
-</head>
-<body>
+
+/* Method edition interactions and responsive task material. */
+.method-flow{display:grid;gap:7px;text-align:center;width:100%;padding:6px;color:var(--green)}
+.method-flow span{padding:9px 16px;background:var(--paper);border:1px solid var(--line);border-radius:11px;font-size:15px}.method-flow b{line-height:1;color:var(--muted)}
+.stagebar{display:flex;gap:5px;background:#f1f4ed;padding:5px;border-radius:12px;margin-bottom:13px}.stagebar span{flex:1;padding:8px 5px;text-align:center;font-size:12px;color:var(--muted);border-radius:8px}.stagebar span.active{background:var(--green);color:white}
+.question-number{display:block;margin-bottom:7px}.material-note{font-size:12px;color:var(--muted);margin:-4px 0 15px}.choice-label{margin:13px 0 10px;font-size:13px}.position-options{display:flex;gap:8px;flex-wrap:wrap}.position-options button.selected{background:var(--pale);border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+.record-card{display:inline-grid;gap:5px;min-width:130px;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--paper);text-align:left;vertical-align:middle}.record-card>span{display:flex;gap:13px;justify-content:space-between;white-space:nowrap}.record-card small{font-size:11px}.record-card b{font-size:13px;font-weight:600}
+.option .record-card{border:0;padding:2px;background:transparent;min-width:0;flex:1}.option .record-card>span{gap:9px}.option .record-card b{font-size:12px}.option{overflow-wrap:anywhere}.option>.token{flex:1}.option .token.word{letter-spacing:2px;font-size:16px;min-width:0;word-break:break-all}.token.number{font-variant-numeric:tabular-nums;font-size:22px;font-weight:600;min-width:60px}.token.word{font-size:18px;letter-spacing:2px;min-width:78px}.token.graphic{padding:5px;min-width:96px;min-height:90px}.token svg.drawing{height:90px;width:120px;max-width:100%;flex-shrink:1}.option .token svg.drawing{height:85px;width:120px}.option .token.graphic{min-width:0}.options.group-options{grid-template-columns:repeat(3,minmax(0,1fr))}.group-options .option{flex-direction:column;align-items:stretch}.group-options .letter{align-self:flex-start}
+.matrix{width:auto}.matrix td{position:relative;padding:4px;vertical-align:middle}.matrix .record-card{min-width:115px;font-size:11px;padding:8px}.matrix .record-card>span{gap:8px}.matrix .record-card b{font-size:12px}.matrix .token{height:auto;min-width:70px;padding:6px}.matrix .token.graphic{min-width:90px}.matrix .token svg.drawing{width:110px;height:85px}.cell-number{display:block;font-size:10px;color:var(--muted);margin-top:3px}.probe-card{display:flex;gap:15px;align-items:center;justify-content:center;margin:0 0 22px;padding:14px;border:1px dashed var(--green);border-radius:13px;background:var(--pale)}
+.analogies{display:grid;gap:11px;margin-bottom:18px}.pair{display:flex;justify-content:center;align-items:center;gap:17px;padding:12px;border:1px solid var(--line);background:#f7f8f3;border-radius:12px}.pair.probe{border-style:dashed;background:var(--pale)}.placement{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:12px}.placement .record-card{padding:2px}.placement .token{min-width:0}.saved-answer{display:flex;gap:9px;align-items:center;flex-wrap:wrap;padding:13px;background:var(--pale);border-radius:11px;margin:13px 0}.saved-answer small{flex-basis:100%}
+.notes{border:1px solid var(--line);border-radius:13px;padding:13px 16px;margin-top:19px;background:#f6f8f2}.notes summary,.solution summary{cursor:pointer;font-size:13px;font-weight:600}.note-body{display:grid;gap:7px;margin-top:12px}.note-body label{font-size:13px}.note-body textarea{min-height:65px}.hint-panel{margin-top:16px}.hint-panel .hint{font-size:13px}.solution{margin-top:18px}.solution>summary{margin-bottom:12px}.solution-answer{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:15px;margin:10px 0;background:#f7f8f3;border:1px solid var(--line);border-radius:13px}.solution-answer>small{flex-basis:100%;text-align:center}.result-pills{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.modal{max-height:85vh;overflow:auto}.modal h2{font-size:22px}.modal p{font-size:14px}
+.reviewcard .record-card{min-width:0;padding:5px;gap:2px}.reviewcard .record-card>span{gap:6px}.reviewcard .record-card b,.reviewcard .record-card small{font-size:9px}.reviewcard .token.number,.reviewcard .token.word{font-size:11px;min-width:25px;letter-spacing:0}.reviewcard .stimuli{max-height:210px;overflow:hidden}.reviewcard .analogies{gap:3px}.reviewcard .pair{padding:3px;gap:3px}.reviewcard .token.graphic{min-height:30px;min-width:30px}.reviewcard .token svg.drawing{height:33px;width:43px}.reviewcard .matrix .token svg.drawing{height:31px;width:41px}.reviewcard .probe-card{padding:5px;gap:5px}.reviewcard .probe-card>small{font-size:9px}.reviewcard .cell-number{font-size:8px}.reviewcard .placement{font-size:9px}.reviewcard .mini{line-height:1.5}
+@media(max-width:1150px){.training{grid-template-columns:minmax(0,1fr) 225px}.record-card{min-width:110px;padding:9px}.record-card>span{gap:8px}.matrix .record-card{min-width:100px}}
+@media(max-width:850px){.training{grid-template-columns:1fr}.aside{display:grid;grid-template-columns:1fr 1fr}.options.group-options{grid-template-columns:repeat(3,minmax(0,1fr))}.matrix td{min-width:0}.matrix .record-card{min-width:95px}}
+@media(max-width:560px){.stagebar span{font-size:10px;padding:8px 2px}.record-card{min-width:105px;padding:8px 9px}.record-card b{font-size:12px}.record-card small{font-size:10px}.stimuli{gap:7px;padding:12px 5px}.options.group-options{grid-template-columns:repeat(2,minmax(0,1fr))}.option .record-card>span{gap:5px}.option .record-card small{font-size:9px}.option .record-card b{font-size:11px}.option .token.word{font-size:15px}.token.number{font-size:20px}.matrix .record-card{min-width:81px;padding:5px 6px}.matrix .record-card>span{gap:4px}.matrix .record-card b{font-size:10px}.matrix .record-card small{font-size:8px}.matrix td{padding:1px}.matrix .token{min-width:50px;padding:4px}.matrix .token.word{font-size:13px;letter-spacing:1px}.matrix .token.graphic{min-width:65px}.matrix .token svg.drawing{width:77px;height:66px}.matrixwrap{overscroll-behavior:contain}.probe-card{padding:10px;gap:9px;flex-wrap:wrap}.token.graphic{min-width:80px;min-height:75px}.token svg.drawing{height:76px;width:100px}.option .token svg.drawing{height:70px;width:92px}.aside{grid-template-columns:1fr}.analogies .pair{gap:9px;padding:10px 5px}.pair .seqarr{display:inline}.notes{padding:12px}.placement{justify-content:center}.qfoot>.row{gap:7px}.qfoot button{font-size:13px}.reviewgrid{grid-template-columns:1fr}.reviewcard .stimuli{max-height:none}.reviewcard .record-card{min-width:65px}.reviewcard .record-card b,.reviewcard .record-card small{font-size:9px}.reviewcard .matrix .record-card{min-width:65px}.reviewcard .probe-card{margin-bottom:4px}.reviewcard .analogies .pair{padding:5px}.reviewcard .matrix .token.word{font-size:10px}.reviewcard .matrix td{min-width:0}}
+
+</style></head><body>
 <div id="app"></div><div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
-<dialog id="resetDialog" class="modal"><h2>重新开始训练？</h2><p>这会清除本网页保存在当前浏览器的作答、笔记和复盘记录。可先在训练记录中导出进度。</p><div class="row"><button id="cancelReset">保留记录</button><button id="confirmReset" class="danger">清除并重新开始</button></div></dialog>
+<dialog id="resetDialog" class="modal"><h2>清除本版训练进度？</h2><p>清除的是方法重做版在本浏览器的记录。旧版数据仍保留。需要时先导出备份。</p><div class="row"><button id="cancelReset">保留记录</button><button id="confirmReset" class="danger">清除本版记录</button></div></dialog>
+<dialog id="methodDialog" class="modal"><div id="methodContent"></div><button id="closeMethod">返回题目</button></dialog>
+<noscript>请开启浏览器JavaScript以进行训练。</noscript>
 <script>
-'use strict';
-const TYPES=[
-{id:'G',name:'概括',en:'Generalization',branch:'a',op:'s',brief:'比较属性，寻找共同点',hint:'逐个比较对象的属性：形状、数量、颜色、含义或数的性质。哪些属性全部相同？'},
-{id:'D',name:'辨别',en:'Discrimination',branch:'a',op:'d',brief:'比较属性，寻找差异',hint:'先找出多数对象共同的属性，再检验哪一个不符合。不要只凭外观熟悉程度。'},
-{id:'C',name:'交叉分类',en:'Cross classification',branch:'a',op:'b',brief:'同时比较属性的相同与不同',hint:'分别看行标题和列标题。缺项必须同时满足两个分类条件。'},
-{id:'R',name:'关系识别',en:'Recognizing relationships',branch:'r',op:'s',brief:'比较关系，寻找共同规律',hint:'比较相邻项或成对对象之间的变化。把同一个关系用于新的对象。'},
-{id:'F',name:'关系区分',en:'Differentiating relationships',branch:'r',op:'d',brief:'比较关系，发现规律中断',hint:'逐段比较相邻项之间的关系，或各组中关系的方向。哪里没有遵守同一种关系？'},
-{id:'S',name:'系统建构',en:'System construction',branch:'r',op:'b',brief:'同时比较关系的相同与不同',hint:'分别推断行方向和列方向的变化，再让候选答案接受两个方向的检验。'}
-];
-const TYPE=Object.fromEntries(TYPES.map(t=>[t.id,t]));
-const LESSONS=[
-['先试着解决','熟悉材料与训练情境，先用自己的办法解决。','自然尝试',[2,2,2,2,2,2]],
-['属性，还是关系','学习区分对象自身的属性与对象之间的关系；重新归类第 1 课题目。','分清对象',[2,2,2,2,2,2]],
-['属性的三种比较','区分概括、辨别和交叉分类；给已遇到的属性题重新归类。','属性分支',[4,4,4,0,0,0]],
-['关系的三种比较','区分关系识别、关系区分和系统建构，并回顾属性题。','关系分支',[0,0,0,4,4,4]],
-['找到共同点，再检查','练习概括与关系识别的解题、反向检验；回顾题型分类。','相同',[6,0,0,6,0,0]],
-['发现差异，再检查','练习辨别与关系区分的解题、反向检验；回顾题型分类。','不同',[0,6,0,0,6,0]],
-['同时处理相同与不同','练习交叉分类与系统建构的解题、检验；回顾题型分类。','相同与不同',[0,0,6,0,0,6]],
-['属性分支的完整练习','复习三种属性题，每道题实践识别、比较与检查三问。','属性巩固',[4,4,4,0,0,0]],
-['关系分支的完整练习','复习三种关系题，每道题实践识别、比较与检查三问。','关系巩固',[0,0,0,4,4,4]],
-['把策略带到新问题','混合练习六类题，自己识别任务、选择比较方法并检查。','混合巩固',[2,2,2,2,2,2]]
-].map((a,i)=>({n:i+1,title:a[0],goal:a[1],tag:a[2],counts:a[3],items:[]}));
-const COLORS=['#cf714d','#447ba1','#5d8660','#9e78a4'];
-const COLORN=['橙色','蓝色','绿色','紫色'];
-const SHAPEN={circle:'圆',square:'方块',triangle:'三角形',diamond:'菱形',star:'星形',arrow:'箭头'};
-const f=(s='circle',c=0,n=1,fill=true,rot=0,size=1)=>({s,c,n,fill,rot,size});
-const grid=(cells,rows,cols)=>({kind:'grid',cells,rows,cols});
-const seq=items=>({kind:'seq',items});
-const bank={};
-function add(k,m,p,stem,opts,answer,why,check,multi=false){(bank[k]??=[]).push({k,m,p,stem,opts,answer:Array.isArray(answer)?answer:[answer],why,check,multi});}
-function v(k,p,stem,opts,a,w,c,multi=false){add(k,'V',p,stem,opts,a,w,c,multi);}
-function n(k,p,stem,opts,a,w,c){add(k,'N',p,stem,opts,a,w,c);}
-function g(k,p,stem,opts,a,w,c,multi=false){add(k,'F',p,stem,opts,a,w,c,multi);}
-// 所有题目均为本网页新编。六类题型与十课目标依据 Klauer & Phye (2008)。
-v('G','选出能加入示例一组的词。',['苹果','梨','桃'],['葡萄','胡萝卜','白菜','土豆'],0,'示例按日常食物分类都属于水果，葡萄符合这一共同属性。','逐个检查：所选词与三个示例之间，是否存在“不是水果”的差异？');
-v('G','哪些词可以与示例归为一组？请选择所有符合的词。',['麻雀','燕子'],['鸽子','蝙蝠','企鹅','蝴蝶'],[0,2],'示例是鸟类；鸽子、企鹅也是鸟类。会不会飞不是共同标准，蝙蝠是哺乳动物。','检查每个已选对象是否都是鸟类，再检查未选对象有没有遗漏的鸟类。',true);
-v('G','下列词语的共同属性是什么？',['铜','铁','铝'],['都是金属','都能被磁铁吸引','都是液体','都是同一种颜色'],0,'三者都属于金属。颜色和磁性并不相同。','主动找反例：铜和铝不满足“都能被磁铁吸引”，但没有一个不是金属。');
-v('G','选出可以扩充这个类别的项目。',['厘米','米','千米'],['分米','千克','秒','摄氏度'],0,'示例都是长度单位，分米也用于测量长度。','反向检查：所选项目测量的是否是质量、时间或温度？分米均不是。');
-v('G','选出与示例共有同一种语言属性的词。',['奔跑','行走','跳跃'],['游泳','泳池','蓝色','安静'],0,'示例都表示动作；游泳也表示动作。','检查四个候选词，只有游泳与每个示例都共享“表示动作”。');
-v('G','选出能加入示例一组的图形名称。',['三角形','正方形','五边形'],['六边形','圆','椭圆','弧线'],0,'示例都是由直线段围成的封闭平面图形，即多边形；六边形符合。','检查选项是否含曲线、是否封闭；六边形没有破坏共同定义。');
-v('G','这些词共享什么性质？',['迅速','快速','飞快'],['意义都与速度快有关','都表示动作慢','都表示温度高','都是身体部位'],0,'三个词都描述较快的速度，表达强度可不同。','试着找一个与“慢”同义的示例：没有；三者都保留速度快的含义。');
-const GF=[
-[[f('circle',0),f('square',0),f('triangle',0)],[f('star',0),f('star',1),f('star',2),f('star',3)],0,'颜色都是橙色，形状可以不同。','逐个忽略形状，只检查颜色；新加入的星形与示例没有颜色差异。'],
-[[f('circle',0),f('circle',1),f('circle',2)],[f('square',0),f('circle',3),f('triangle',0),f('star',0)],1,'共同属性是圆形；颜色不是分类依据。','确认所选图形没有变成其他形状，且不要求颜色一致。'],
-[[f('circle',0,2),f('triangle',1,2),f('square',2,2)],[f('star',0,1),f('star',0,3),f('star',3,2),f('star',0,4)],2,'每张示例卡片都恰好有两个图形。','重新计数，所选卡片与任一示例都没有数量差异。'],
-[[f('circle',0,1,false),f('square',1,1,false),f('triangle',2,1,false)],[f('star',0),f('star',1),f('star',2,1,false),f('star',3)],2,'示例都是空心图形；颜色和形状不同。','检查内部是否有填色：所有示例和所选图形都没有填色。'],
-[[f('arrow',0,1,true,90),f('arrow',1,1,true,90),f('arrow',2,1,true,90)],[f('arrow',3),f('arrow',3,1,true,180),f('arrow',3,1,true,270),f('arrow',3,1,true,90)],3,'箭头全都朝下；颜色只是表面差异。','只看方向，所选箭头与每个示例的方向相同。'],
-[[f('triangle',1),f('triangle',1,2),f('triangle',1,3)],[f('triangle',0),f('square',1),f('triangle',1,4),f('circle',1)],2,'共同属性同时包括蓝色和三角形；数量可以变化。','分别检查颜色和形状，没有一项共同属性被破坏。']
-];
-GF.forEach(a=>g('G','哪张卡片能加入示例一组？',a[0],a[1],a[2],a[3],a[4]));
-g('G','选出所有与示例共有“蓝色且空心”属性的卡片。',[f('circle',1,1,false),f('square',1,2,false)],[f('star',1,1,false),f('triangle',1,3,false),f('circle',1),f('square',0,1,false)],[0,1],'前两张同时是蓝色、空心；其余各缺少一个共同属性。','每张已选卡分别检查两项条件；未选卡各有一个反例。',true);
-[
-['按奇偶性比较，哪个数可以加入一组？',['6','10','14'],['18','21','25','33'],0,'示例都是偶数，18也是偶数。','用除以2的余数检验：四个组内数的余数都为0。'],
-['按是否为3的倍数比较，哪个数可以加入？',['9','15','24'],['30','28','35','22'],0,'9、15、24、30都能被3整除。','逐个试除，所选数没有产生非零余数。'],
-['按是否为完全平方数比较，哪个数符合？',['4','9','25'],['32','36','30','28'],1,'4、9、25、36分别是2、3、5、6的平方。','检查候选数能否写成某个整数自乘；36可以。'],
-['按能否被5整除比较，哪个数可以加入？',['10','25','40'],['54','52','53','55'],3,'共同属性是能被5整除，即十进制个位为0或5。','55除以5余数为0，没有破坏整除属性。'],
-['哪个分数与所有示例表示相同的数值？',['1/2','2/4','3/6'],['4/8','4/6','3/8','2/3'],0,'所有示例约分后都是1/2，4/8也是1/2。','将分子乘2，必须等于分母；逐个检验均成立。'],
-['按数字从左、从右读是否相同比较，哪个数符合？',['121','242','363'],['485','484','486','487'],1,'示例都是三位回文数，484反向读仍为484。','反向读选中的数，与原数比较，没有不同。']
-].forEach(a=>n('G',...a));
-v('D','按日常食物类别，找出与其余不同的一项。',['苹果','梨','胡萝卜','桃'],['苹果','梨','胡萝卜','桃'],2,'苹果、梨、桃通常归为水果，胡萝卜通常归为蔬菜。','去掉胡萝卜后检查剩余三项，是否都具有水果这一共同属性？');
-v('D','按动物类别，哪一项不属于同一组？',['麻雀','燕子','蝙蝠','鸽子'],['麻雀','燕子','蝙蝠','鸽子'],2,'三种是鸟类，蝙蝠是哺乳动物。会飞不能区分这组。','去掉蝙蝠后检查其余对象是否全部属于鸟类。');
-v('D','按测量的量，哪个单位不同？',['米','厘米','千克','毫米'],['米','厘米','千克','毫米'],2,'三个单位测长度，千克测质量。','剩下三个单位可用于同一类长度测量，没有量纲差异。');
-v('D','按是否表示一个季节，哪一项不同？',['春季','夏季','星期一','秋季'],['春季','夏季','星期一','秋季'],2,'星期一表示一周中的一天，其余表示季节。','检查剩余项目是否全是季节名称。');
-v('D','按是否由直线段围成，哪个图形名称不同？',['三角形','正方形','圆','六边形'],['三角形','正方形','圆','六边形'],2,'圆的边界是曲线，其余是多边形。','移除圆后，检查其余边界是否全部由直线段构成。');
-v('D','按词义，哪个词与其余不属于同一组？',['快乐','高兴','愉快','悲伤'],['快乐','高兴','愉快','悲伤'],3,'前三个词表示愉悦情绪，悲伤表示相反的情绪。','移除悲伤后，三个词之间可以找到稳定的意义共同点。');
-v('D','按是否为哺乳动物，哪个对象不同？',['鲸','海豚','鲨鱼','海豹'],['鲸','海豚','鲨鱼','海豹'],2,'鲨鱼是鱼类，其余是哺乳动物。生活在水里不是区分依据。','检查留下的三种动物是否全部具有哺乳动物的类别属性。');
-const DF=[
-[[f('circle',0),f('circle',1),f('triangle',2),f('circle',3)],2,'三张是圆形，第三张是三角形。','去掉第三张后，只比较形状，余下全部相同。'],
-[[f('circle',1),f('square',1),f('triangle',0),f('star',1)],2,'三张是蓝色，第三张是橙色。','忽略形状，去掉第三张后颜色全部相同。'],
-[[f('circle',0,2),f('square',1,2),f('triangle',2,3),f('star',3,2)],2,'第三张有三个图形，其他卡片各有两个。','分别计数，去掉第三张后数量无差异。'],
-[[f('circle',0,1,false),f('square',1,1,false),f('triangle',2),f('star',3,1,false)],2,'第三张为实心，其余空心。','排除第三张后，检查所有图形内部是否都未填色。'],
-[[f('arrow',0),f('arrow',1),f('arrow',2,1,true,180),f('arrow',3)],2,'第三张箭头朝左，其余都朝右。','忽略颜色，检查余下箭头是否方向一致。'],
-[[f('circle',0,1,true,0,1),f('circle',1,1,true,0,1),f('circle',2,1,true,0,2),f('circle',3,1,true,0,1)],2,'第三个圆更大，其余大小相同。','只比较尺寸，排除第三个后不存在尺寸差异。'],
-[[f('triangle',1,1,false),f('triangle',1,2,false),f('triangle',1,1,true),f('triangle',1,3,false)],2,'第三张虽然也是蓝色三角形，却不符合空心这一共同属性。','从颜色、形状、填充三方面检验剩余卡片，三项全部一致。']
-];
-DF.forEach(a=>g('D','哪一项的属性与其余不同？',a[0],a[0],a[1],a[2],a[3]));
-[
-[['12','18','25','32','46'],2,'25是奇数，其他都是偶数。','去掉25后，所有数除以2的余数都为0。'],
-[['9','15','21','26','33'],3,'26不能被3整除，其他都能。','用同一种整除检验检查剩余四个数，余数全部为0。'],
-[['4','9','16','20','25'],3,'20不是完全平方数；其余可写成整数的平方。','分别写出2²、3²、4²、5²，检查无遗漏。'],
-[['8','16','32','48','64'],3,'48不是2的整数次幂，其余依次为2³、2⁴、2⁵、2⁶。','反向检查其他数是否都只需将若干个2连乘。'],
-[['1/2','2/4','3/6','4/9'],3,'前三个分数都等于1/2，4/9不同。','把剩余分数约分，检查数值是否完全一致。'],
-[['121','242','356','484'],2,'356反向读为653；其余反向读等于本身。','反向读剩余各数，没有出现次序不同。']
-].forEach((a,i)=>n('D',['按奇偶性','按是否能被3整除','按是否为完全平方数','按是否为2的整数次幂','按分数数值','按是否为三位回文数'][i]+'比较，哪一项不同？',a[0],a[0],a[1],a[2],a[3]));
-const CV=[
-[grid([['自行车','摩托车'],['帆船',null]],['陆上','水上'],['不用发动机','用发动机']),['汽艇','滑板','手摇船','汽车'],0,'缺项必须同时属于水上交通工具且使用发动机，因此是汽艇。','先排除陆上工具，再排除不用发动机的工具。'],
-[grid([['麻雀','蝙蝠'],['企鹅',null]],['有飞行能力','没有飞行能力'],['鸟类','哺乳动物']),['燕子','海豚','蜻蜓','鸽子'],1,'需要没有飞行能力的哺乳动物，海豚同时满足。','检查类别与飞行能力，不能只满足其中一项。'],
-[grid([['晴天','雨天'],['晴夜',null]],['白昼','夜晚'],['晴朗','下雨']),['雨夜','清晨','晴空','白云'],0,'缺项是夜晚与下雨两项属性的交集。','雨夜同时排除了“白昼”和“晴朗”两个相反条件。'],
-[grid([['正方形','非正方形长方形'],['等边三角形',null]],['四边形','三角形'],['所有边等长','不是所有边等长']),['圆','不等边三角形','菱形','正五边形'],1,'应为三角形，并且不是三边都等长；不等边三角形符合。','检查边数为3，再检查不是所有边等长。'],
-[grid([['棉衬衫','羊毛衬衫'],['棉围巾',null]],['衬衫','围巾'],['棉制','羊毛制']),['羊毛帽','棉裤','羊毛围巾','棉围巾'],2,'所需对象是羊毛制的围巾。','材料和物品类别分别检查，两项均应无反例。'],
-[grid([['冰水','热水'],['冰牛奶',null]],['水','牛奶'],['冷饮','热饮']),['热茶','热牛奶','冰水','冰果汁'],1,'缺项是牛奶且为热饮，只有热牛奶符合。','检查所选饮料是否属于牛奶，且不是冷饮。']
-];
-CV.forEach(a=>v('C','根据行、列的两个分类条件，补上问号。',a[0],a[1],a[2],a[3],a[4]));
-function figCross(rows,cols,cell,missing,choices,ans,why){const cells=rows.map((r,i)=>cols.map((c,j)=>i===missing[0]&&j===missing[1]?null:cell(i,j)));g('C','按行、列标题同时分类，哪张卡片填入问号？',grid(cells,rows,cols),choices,ans,why,'分别对照行标题和列标题，排除任何只满足一个条件的卡片。');}
-figCross(['圆形','三角形'],['橙色','蓝色'],(i,j)=>f(i?'triangle':'circle',j),[1,1],[f('triangle',1),f('triangle',0),f('circle',1),f('square',1)],0,'需同时是三角形和蓝色。');
-figCross(['方块','星形'],['橙色','蓝色','绿色'],(i,j)=>f(i?'star':'square',j),[1,2],[f('star',0),f('square',2),f('star',2),f('star',1)],2,'需同时是星形和绿色，这是六格分类表。');
-figCross(['圆形','三角形','方块'],['橙色','蓝色','紫色'],(i,j)=>f(['circle','triangle','square'][i],[0,1,3][j]),[2,1],[f('square',0),f('square',1),f('triangle',1),f('circle',3)],1,'需同时是方块和蓝色，这是九格分类表。');
-figCross(['1个','2个'],['蓝色','绿色'],(i,j)=>f('circle',j+1,i+1),[1,0],[f('circle',1),f('circle',2,2),f('circle',1,2),f('circle',1,3)],2,'需同时是两个图形和蓝色。');
-figCross(['星形','菱形'],['空心','实心'],(i,j)=>f(i?'diamond':'star',0,1,!!j),[1,0],[f('star',0,1,false),f('diamond',0),f('diamond',0,1,false),f('star',0)],2,'需同时是菱形和空心。');
-figCross(['小','大'],['空心','实心'],(i,j)=>f('circle',1,1,!!j,0,i+1),[1,1],[f('circle',1,1,true,0,2),f('circle',1,1,false,0,2),f('circle',1),f('circle',1,1,false)],0,'需同时是较大的圆和实心。');
-figCross(['1个','2个','3个'],['橙色','绿色','紫色'],(i,j)=>f('triangle',[0,2,3][j],i+1),[2,2],[f('triangle',3,2),f('triangle',2,3),f('triangle',3,3),f('triangle',0,3)],2,'需同时是三个三角形和紫色。');
-const CN=[
-[grid([['11','12'],['25',null]],['小于20','大于20'],['奇数','偶数']),['17','19','26','27'],2,'缺项大于20且为偶数，26符合。'],
-[grid([['3','4'],['−5',null]],['正整数','负整数'],['奇数','偶数']),['−6','6','−7','5'],0,'需为负偶数，−6符合。'],
-[grid([['6','9'],['10',null]],['3的倍数','不是3的倍数'],['偶数','奇数']),['12','15','14','11'],3,'需为奇数且不是3的倍数，11符合。'],
-[grid([['1/2','2'],['−1/2',null]],['正数','负数'],['绝对值小于1','绝对值大于1']),['−1/4','3','−3','1/4'],2,'−3为负数，且绝对值3大于1。'],
-[grid([['25','30'],['49',null]],['小于40','大于40'],['个位是5或9','个位是0或2']),['35','52','55','32'],1,'52大于40且个位是2，同时满足两项条件。'],
-[grid([['9','27'],['16',null]],['奇数','偶数'],['完全平方数','完全立方数']),['25','36','8','7'],2,'8为偶数且是2³，符合完全立方数的列条件。'],
-[grid([['12','24','36'],['15','25',null]],['偶数','奇数'],['小于20','20到30之间','大于30']),['18','28','42','35'],3,'需为大于30的奇数，35符合。']
-];
-CN.forEach(a=>n('C','同时对照行、列条件，哪个数应填入问号？',a[0],a[1],a[2],a[3],'用两个相反条件试着排除所选数；它不应落入错误的行或列。'));
-[
-['把第一组的关系用于第二组。',['手套 : 手','鞋子 : ？'],['脚','帽子','袜子','手指'],0,'手套穿戴在手上，鞋子穿戴在脚上。','反向读两组：手穿戴手套，脚穿戴鞋子，关系仍对应。'],
-['把第一组的关系用于第二组。',['鸟 : 鸟巢','蜜蜂 : ？'],['蜂蜜','花朵','蜂巢','翅膀'],2,'鸟巢是鸟的栖居处，蜂巢是蜜蜂的栖居处。','检查第二组有没有把栖居处换成食物或身体部位。'],
-['按相同的词义关系补全。',['寒冷 : 炎热','黑暗 : ？'],['夜晚','光明','漆黑','阴影'],1,'第一组为反义关系，黑暗与光明也相反。','从右向左再比较，两组都仍是反义关系。'],
-['按生长阶段继续这条序列。',seq(['幼苗','小树','？']),['种子','树叶','大树','泥土'],2,'序列按生长过程推进，幼苗、小树之后为大树。','反向检查为大树、小树、幼苗，阶段依次倒退。'],
-['按相邻单位的十倍关系继续。',seq(['厘米','分米','？']),['毫米','米','千米','千克'],1,'1分米等于10厘米，1米等于10分米。','从米回到分米再到厘米，每一步缩小为原单位的十分之一。'],
-['按同样的时间间隔继续。',seq(['星期一','星期三','星期五','？']),['星期六','星期二','星期日','星期四'],2,'每一步后移两天，星期五后移两天是星期日。','从星期日向前每次退两天，可依次回到星期五、星期三、星期一。']
-].forEach(a=>v('R',...a));
-const RF=[
-[seq([f('arrow',1),f('arrow',1,1,true,90),f('arrow',1,1,true,180),'？']),[f('arrow',1,1,true,270),f('arrow',1),f('arrow',1,1,true,90),f('arrow',1,1,true,180)],0,'每一步顺时针旋转90°，下一项向上。','反向每步逆时针转90°，能返回所有已知箭头。'],
-[seq([f('circle',0),f('circle',0,2),f('circle',0,3),'？']),[f('circle',0,2),f('circle',0,4),f('circle',0,5),f('circle',0)],1,'每张卡片比前一张多一个圆，下一张应有四个。','反向每次减少一个圆，数量回到3、2、1。'],
-[seq([f('square',1),f('square',0),f('square',1),f('square',0),'？']),[f('square',0),f('triangle',1),f('square',1),f('circle',0)],2,'方块颜色在蓝、橙之间交替。','检验相邻卡片颜色都不同，隔一张则相同。'],
-[seq([f('circle',2),f('triangle',2),f('square',2),f('circle',2),f('triangle',2),'？']),[f('circle',2),f('triangle',2),f('star',2),f('square',2)],3,'圆、三角形、方块构成重复的三项循环。','把前后三项配对，循环中对应位置的形状应相同。'],
-[[f('arrow',0), '→',f('arrow',0,1,true,180), '；',f('arrow',1,1,true,270),'→','？'],[f('arrow',1,1,true,90),f('arrow',1),f('arrow',1,1,true,270),f('arrow',1,1,true,180)],0,'第一组箭头转180°，第二组向上的箭头也应转180°成为向下。','再转180°应回到原箭头，两个组都能还原。'],
-[seq([f('triangle',3),f('triangle',3,2),f('triangle',3,4),'？']),[f('triangle',3,5),f('triangle',3,6),f('triangle',3,8),f('triangle',3,3)],2,'图形数量每次乘2，1、2、4之后为8。','反向每次除以2，依次得到4、2、1。'],
-[seq([f('circle',0,1,false),f('circle',0),f('circle',0,1,false),f('circle',0),'？']),[f('circle',0),f('square',0,1,false),f('circle',1,1,false),f('circle',0,1,false)],3,'圆的填充在空心与实心之间交替，形状和颜色不变。','检查填充相邻相反、隔项相同，同时检查形状颜色不变。']
-];
-RF.forEach(a=>g('R','比较各步或各组的关系，补上问号。',a[0],a[1],a[2],a[3],a[4]));
-[
-[['2','4','6','8','？'],['9','10','12','16'],1,'每次增加2，8之后为10。','反向每次减2，依次回到8、6、4、2。'],
-[['5','10','15','20','？'],['21','24','25','30'],2,'相邻数的差都是5，下一项为25。','从25起每次减5，回到所有已知项。'],
-[['3','6','12','24','？'],['36','42','48','54'],2,'每次乘2，24之后为48。','反向除以2，每步都能还原前一项。'],
-[['1','3','6','10','？'],['13','14','15','16'],2,'增加量依次为2、3、4，下一次加5，得到15。','将15减10得到5，与之前差值2、3、4接成连续序列。'],
-[['1','4','9','16','？'],['20','24','25','36'],2,'依次是1²、2²、3²、4²，下一项是5²=25。','开平方后应为连续整数1、2、3、4、5。'],
-[['2 → 5','4 → 9','7 → ？'],['12','14','15','16'],2,'每组关系为左数乘2再加1，7对应15。','将15先减1再除以2得到7；其余各组也都可这样还原。'],
-[['1/2','1/4','1/8','？'],['1/10','1/12','1/16','1/18'],2,'每一步将原数除以2，1/8之后为1/16。','反向乘2，应依次回到1/8、1/4、1/2。']
-].forEach(a=>n('R','采用能一致解释所有已知项的常见简单规律，补上问号。',seq(a[0]),a[1],a[2],a[3],a[4]));
-const FV=[
-[['鸟 → 鸟巢','蜜蜂 → 蜂巢','蚁穴 → 蚂蚁','兔子 → 兔窝'],2,'多数为动物到栖居处，第三组的方向倒置。','反向检查其余三组，均为栖居处到对应动物；第三组不一致。'],
-[['书 → 纸','木桌 → 木材','玻璃杯 → 玻璃','面粉 → 面包'],3,'前三组为成品到主要材料，第四组是材料到成品。','将第四组倒转为面包到面粉后，四组方向才一致。'],
-[['医生 → 医院','教师 → 学校','厨师 → 厨房','机场 → 飞行员'],3,'多数为职业角色到典型工作场所，第四组方向相反。','反向读其余三组都是工作场所到职业角色。'],
-[['手 → 手套','脚 → 鞋子','帽子 → 头','眼睛 → 眼镜'],2,'前三个对应关系中，多数是身体部位到穿戴物，第三组反向。','把第三组改为头到帽子后，方向恢复一致。'],
-[['幼苗 → 大树','毛虫 → 蝴蝶','青蛙 → 蝌蚪','雏鸡 → 成鸡'],2,'多数从较早发育阶段到较晚阶段，青蛙到蝌蚪方向相反。','反过来检查其余三组，都是由较晚阶段回到较早阶段。'],
-[['大 → 小','高 → 低','远 → 近','快 → 迅速'],3,'前三组为反义关系，最后一组为近义关系。','检查剩余词对是否都意义相反，最后一组无法通过此检验。'],
-[['昨天 → 今天','今天 → 明天','前天 → 昨天','明天 → 今天'],3,'多数从一天到它的后一天，最后一组倒退了一天。','反向读其余各组均为前移一天，只有最后一组不是。']
-];
-FV.forEach(a=>v('F','哪一组关系或关系方向与其余不同？',a[0],a[0],a[1],a[2],a[3]));
-const FF=[
-[[1,2,4,4,5].map(x=>f('circle',0,x)),2,'数量应为1、2、3、4、5，第三项的4应改为3。','替换为3后，所有相邻数量差都为1。'],
-[[0,90,180,180,0].map(x=>f('arrow',1,1,true,x)),3,'应每次顺时针旋转90°，第四项应向上。','把第四项改为向上后，正向与反向旋转均能逐项还原。'],
-[[1,2,5,8].map(x=>f('triangle',2,x)),2,'数量按乘2增长，第三项的5应为4。','把5改为4后，每个后项除以前项均为2。'],
-[['circle','square','circle','triangle','circle'].map(x=>f(x,3)),3,'圆和方块交替出现，第四项应为方块。','修改后，隔项形状相同、相邻形状不同。'],
-[[1,2,1,4].map(x=>f('circle',1,1,true,0,x)),2,'圆的尺寸等级应逐级变大，第三项误变为小圆。','将第三项改为第三级尺寸后，尺寸依次增加，反向依次减小。'],
-[[0,90,180,90,0].map(x=>f('arrow',0,1,true,x)),3,'箭头本应连续顺时针转90°，第四项应向上，而非向下。','改正后，每一段都具有同样的90°旋转关系。']
-];
-FF.forEach(a=>g('F','按最简单的一致变化，哪一项破坏了序列？',seq(a[0]),a[0].map((_,i)=>'第 '+(i+1)+' 项'),a[1],a[2],a[3]));
-const FN=[
-[['2','4','6','9','10'],3,'相邻项本应加2，第四项应为8。','把9改为8后，前后两侧的差都恢复为2。'],
-[['3','6','12','25','48'],3,'应每次乘2，第四项应为24。','24既是12的2倍，48也正好是24的2倍。'],
-[['20','17','14','10','8'],3,'应每次减3，第四项应为11。','14−11与11−8都为3。'],
-[['1','4','9','15','25'],3,'应为连续正整数的平方，第四项应为16。','开平方后应为1、2、3、4、5，15无法产生整数4。'],
-[['2','5','10','17','25','37'],4,'各项应为连续正整数的平方加1，第五项应为26。','逐项减1再开平方，修正后得到1到6。'],
-[['100','50','25','13','6.25'],3,'应每次除以2，第四项应为12.5。','12.5的2倍是25，而6.25的2倍是12.5。'],
-[['2 → 6','3 → 9','4 → 11','5 → 15'],2,'各组本应右数为左数的3倍，第三组应为4→12。','右数除以3应还原左数；11无法还原4。']
-];
-FN.forEach(a=>n('F','按最简单的一致规律，哪一项或哪一组中有错误？',seq(a[0]),a[0].map((x,i)=>'第 '+(i+1)+' 项：'+x),a[1],a[2],a[3]));
-const SV=[
-[[['小雨','大雨'],['小风',null]],['大风','小雪','暴雨','微风'],0,'横向把“小”换成“大”，纵向把“雨”换成“风”，交会结果是大风。','从大风反向还原：向左为小风，向上为大雨，两路均吻合。'],
-[[['走','走过'],['看',null]],['看到','看过','走着','看见'],1,'每行右侧在左侧词后加“过”；纵向将走换成看。','去掉“过”应还原看；把看换回走应得到走过。'],
-[[['不高','高'],['不快',null]],['不慢','很快','快','低'],2,'横向删去“不”，纵向保持从高到快的替换关系。','给快加回“不”得到不快；沿列换回高可还原上方。'],
-[[['冷','很冷'],['远',null]],['不远','近','遥远','很远'],3,'横向增加程度副词“很”，纵向把冷换成远。','删除“很”还原远，替换回冷还原很冷。'],
-[[['种子','幼苗','大树'],['鸡蛋','雏鸡','成鸡'],['鱼卵','幼鱼',null]],['鱼卵','成鱼','雏鸡','小树'],1,'各行从早期到幼体再到成熟阶段；各列对应不同生物的同一发展阶段。','成鱼向左回溯为幼鱼；同列与大树、成鸡比较，均为成熟阶段。'],
-[[['昨晨','今晨','明晨'],['昨晚','今晚',null]],['今晨','昨晚','明晚','明晨'],2,'横向日期依次后移一天，纵向把早晨换成晚上。','明晚退一天为今晚；将晚上换成早晨为明晨。'],
-[[['短','较短','最短'],['长','较长',null]],['最长','很短','较长','更短'],0,'横向程度依次变化，纵向保持短与长的对应；缺项为最长。','比较两行同一位置的程度，再检查长与短的对应不被破坏。']
-];
-SV.forEach(a=>v('S','同时比较行、列的变换关系，补上问号。',grid(a[0]),a[1],a[2],a[3],a[4]));
-const SF=[
-[[[f('arrow',1,1,true,0),f('arrow',1,1,true,90)],[f('arrow',1,2,true,0),null]],[f('arrow',1,2,true,90),f('arrow',1,1,true,90),f('arrow',1,2,true,180),f('arrow',1,2)],0,'横向每个箭头顺时针转90°，纵向数量增加1；答案为两个向下箭头。','逆时针转回可还原左格，减少一个箭头可还原上格。'],
-[[[f('circle',0),f('circle',0,2),f('circle',0,3)],[f('circle',0,2),f('circle',0,3),f('circle',0,4)],[f('circle',0,3),f('circle',0,4),null]],[f('circle',0,4),f('circle',0,6),f('circle',0,5),f('circle',0,3)],2,'向右与向下都增加一个圆，交会格应有5个圆。','向左减少1得到4，向上减少1也得到4，两个方向均吻合。'],
-[[[f('triangle',2),f('triangle',2,2)],[f('triangle',2,3),null]],[f('triangle',2,2),f('triangle',2,3),f('triangle',2,5),f('triangle',2,4)],3,'横向数量加1，纵向数量加2，缺项为4。','4−1=3还原左格，4−2=2还原上格。'],
-[[[f('arrow',3),f('arrow',3,1,true,90)],[f('arrow',3,1,true,180),null]],[f('arrow',3),f('arrow',3,1,true,270),f('arrow',3,1,true,90),f('arrow',3,1,true,180)],1,'横向顺时针转90°，纵向转180°，左下向左再转90°为向上。','向上逆时针转90°回到向左；再转180°回到右上向下。'],
-[[[f('square',1),f('square',1,2)],[f('square',1,3),null]],[f('square',1,4),f('square',1,5),f('square',1,6),f('square',1,8)],2,'横向数量乘2，纵向乘3，缺项为6个方块。','6除以2还原3，除以3还原2，两条路径一致。'],
-[[[f('arrow',0),f('arrow',0,1,true,90),f('arrow',0,1,true,180)],[f('arrow',0,1,true,90),f('arrow',0,1,true,180),f('arrow',0,1,true,270)],[f('arrow',0,1,true,180),f('arrow',0,1,true,270),null]],[f('arrow',0,1,true,90),f('arrow',0,1,true,180),f('arrow',0),f('arrow',0,1,true,270)],2,'向右和向下都顺时针转90°，缺项应向右。','从向右逆时针转90°均还原为左边和上边的向上箭头。']
-];
-SF.forEach(a=>g('S','找出横向、纵向的变化关系，选出同时符合的卡片。',grid(a[0]),a[1],a[2],a[3],a[4]));
-const SN=[
-[[['2','4'],['5',null]],['6','7','8','9'],1,'横向加2，纵向加3，所以缺项为7。','7−2=5还原左格，7−3=4还原上格。'],
-[[['3','6'],['5',null]],['8','9','10','12'],2,'每行右侧为左侧的2倍；左列加2时，右列对应加4，得到10。','10÷2=5；10−4=6，两方向都成立。'],
-[[['1','3','5'],['4','6','8'],['7','9',null]],['10','11','12','13'],1,'每行向右加2，每列向下加3，缺项为11。','11−2=9，11−3=8。'],
-[[['2','4','8'],['3','6','12'],['4','8',null]],['12','14','16','18'],2,'每行向右乘2，三列向下分别加1、2、4，缺项为16。','16÷2=8；16−4=12，可还原左格和上格。'],
-[[['8','7','6'],['6','5','4'],['4','3',null]],['0','1','2','5'],2,'横向减1，纵向减2，所以缺项为2。','2+1=3，2+2=4，还原两个方向的相邻项。'],
-[[['1','2','3'],['2','4','6'],['3','6',null]],['7','8','9','12'],2,'表格是行序号与列序号的乘积；每行与每列均按对应倍数增长。','缺项9除以行倍数3得到列数3，除以列倍数3也得到行数3。'],
-[[['1','4','9'],['4','9','16'],['9','16',null]],['20','24','25','36'],2,'逐格开平方得到1、2、3；2、3、4；3、4、5，向右或向下均加1。','25开平方为5，向左或向上减1都得到4，再平方回到16。']
-];
-SN.forEach(a=>n('S','比较矩阵两个方向的关系，补上问号。',grid(a[0]),a[1],a[2],a[3],a[4]));
-// 固定且可审计的分配：六类各20，三种材料各40；原论文没有公开逐题分课表。
-const offsets=[0,0,1,1,2,2],MODES=['V','F','N'],all=[];
-TYPES.forEach((t,ti)=>{const by=Object.fromEntries(MODES.map(m=>[m,bank[t.id].filter(q=>q.m===m)]));const ordered=[];for(let j=0;j<20;j++){const m=MODES[(j+offsets[ti])%3];const q=by[m].shift();if(!q)throw Error('题库材料配额错误 '+t.id+' '+m);q.id=t.id+String(j+1).padStart(2,'0');q.rank=j;ordered.push(q);all.push(q);}bank[t.id]=ordered;});
-const cursors=Object.fromEntries(TYPES.map(t=>[t.id,0]));
-LESSONS.forEach(l=>{const left=[...l.counts];while(left.some(Boolean))TYPES.forEach((t,i)=>{if(left[i]>0){const q=bank[t.id][cursors[t.id]++];q.lesson=l.n;l.items.push(q.id);left[i]--;}});});
-const Q=Object.fromEntries(all.map(q=>[q.id,q]));
-const KEY='klauer-comparison-lab-v1',SCHEMA=1;
-const initial=()=>({schema:SCHEMA,name:'',lesson:1,index:0,answers:{},reviews:{},started:Date.now()});
-let state=initial(),storageOK=true,view='home',selected=[],hintLevel=0,feedback=null,reviewBucket='a',reviewFilter='all',toastTimer;
-try{const raw=localStorage.getItem(KEY);if(raw)state=validate(JSON.parse(raw));localStorage.setItem(KEY,JSON.stringify(state));}catch(e){storageOK=false;}
-function validate(data){if(!data||data.schema!==SCHEMA||!data.answers||typeof data.answers!=='object'||Array.isArray(data.answers))throw Error('进度格式不匹配');const out=initial();out.name=typeof data.name==='string'?data.name.slice(0,40):'';out.lesson=Number.isInteger(data.lesson)&&data.lesson>=1&&data.lesson<=10?data.lesson:1;out.index=Number.isInteger(data.index)&&data.index>=0&&data.index<12?data.index:0;out.started=Number.isFinite(data.started)?data.started:Date.now();for(const [id,a] of Object.entries(data.answers)){if(!Q[id]||!a||typeof a!=='object')continue;const ok=a.done===true;out.answers[id]={done:ok,first:a.first===true,attempts:Math.min(999,Math.max(0,Number(a.attempts)||0)),hints:Math.min(3,Math.max(0,Number(a.hints)||0)),seen:a.seen===true,checked:a.checked===true,ba:['a','r'].includes(a.ba)?a.ba:'',op:['s','d','b'].includes(a.op)?a.op:'',note:typeof a.note==='string'?a.note.slice(0,4000):'',verify:typeof a.verify==='string'?a.verify.slice(0,4000):'',choice:Array.isArray(a.choice)?a.choice.filter(i=>Number.isInteger(i)&&i>=0&&i<Q[id].opts.length):[],time:Number(a.time)||0};}if(data.reviews&&typeof data.reviews==='object')for(let l=2;l<=10;l++){const r=data.reviews[l];if(r&&typeof r==='object')out.reviews[l]=Object.fromEntries(Object.entries(r).filter(([id,x])=>Q[id]&&x===true));}return out;}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state));storageOK=true;}catch(e){storageOK=false;}const e=document.getElementById('storageStatus');if(e)e.textContent=storageOK?'进度已保存在本浏览器':'当前环境无法保存，请导出进度';}
-const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const answerFor=id=>state.answers[id]||{};
-const doneCount=()=>all.filter(q=>answerFor(q.id).done).length;
-const countLesson=l=>l.items.filter(id=>answerFor(id).done).length;
-const currentQ=()=>Q[LESSONS[state.lesson-1].items[state.index]];
-const branchName=x=>x==='a'?'对象的属性':'对象之间的关系';
-const opName=x=>({s:'相同',d:'不同',b:'相同与不同'}[x]);
-function toast(t){clearTimeout(toastTimer);const el=document.getElementById('toast');el.textContent=t;el.classList.remove('hidden');toastTimer=setTimeout(()=>el.classList.add('hidden'),3600);}
-function figLabel(o){return COLORN[o.c]+'、'+(o.fill?'实心':'空心')+'、'+(o.s==='arrow'?['向右','向下','向左','向上'][((o.rot||0)/90)%4]:'')+SHAPEN[o.s]+'，'+o.n+'个'+(o.size>1?'，尺寸等级'+o.size:'');}
-function figure(o){let n=o.n,cols=n<=3?n:n<=8?4:5,rows=Math.ceil(n/cols),w=96,h=76,stepX=w/(cols+1),stepY=h/(rows+1),r=Math.min(9+4*(o.size-1),stepX*.37,stepY*.36);if(n===1)r=10+4*(o.size-1);const fill=o.fill?COLORS[o.c]:'none',stroke=COLORS[o.c];let parts='';for(let k=0;k<n;k++){let x=stepX*(k%cols+1),y=stepY*(Math.floor(k/cols)+1),shape='';if(o.s==='circle')shape=`<circle r="${r}"/>`;if(o.s==='square')shape=`<rect x="${-r}" y="${-r}" width="${r*2}" height="${r*2}" rx="1"/>`;if(o.s==='triangle')shape=`<path d="M 0 ${-r} L ${r} ${r} L ${-r} ${r} Z"/>`;if(o.s==='diamond')shape=`<path d="M 0 ${-r} L ${r} 0 L 0 ${r} L ${-r} 0 Z"/>`;if(o.s==='star'){const pts=Array.from({length:10},(_,i)=>{const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.44:r;return`${Math.cos(a)*rr},${Math.sin(a)*rr}`}).join(' ');shape=`<polygon points="${pts}"/>`;}if(o.s==='arrow')shape=`<path d="M ${-r} ${-r*.33} H 0 V ${-r} L ${r} 0 L 0 ${r} V ${r*.33} H ${-r} Z"/>`;parts+=`<g transform="translate(${x} ${y}) rotate(${o.rot||0})" fill="${fill}" stroke="${stroke}" stroke-width="1.8" stroke-linejoin="round">${shape}</g>`;}return`<svg viewBox="0 0 96 76" role="img" aria-label="${esc(figLabel(o))}">${parts}</svg>`;}
-function token(o){if(o===null)return'<span class="token blank" aria-label="待补充">?</span>';if(o&&typeof o==='object'&&o.s)return`<span class="token">${figure(o)}</span>`;return`<span class="token">${esc(o)}</span>`;}
-function stimulus(s){if(s?.kind==='grid'){const c=s.cells;return`<div class="stimuli"><div class="matrixwrap"><table class="matrix" aria-label="题目矩阵">${s.cols?'<thead><tr>'+(s.rows?'<th></th>':'')+s.cols.map(x=>`<th scope="col">${esc(x)}</th>`).join('')+'</tr></thead>':''}<tbody>${c.map((row,i)=>`<tr>${s.rows?`<th scope="row">${esc(s.rows[i])}</th>`:''}${row.map(x=>`<td>${token(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`;}if(s?.kind==='seq')return`<div class="stimuli">${s.items.map((x,i)=>`${i?'<span class="seqarr" aria-hidden="true">→</span>':''}<div class="seqitem">${token(x)}<small>第 ${i+1} 项</small></div>`).join('')}</div>`;return`<div class="stimuli">${(Array.isArray(s)?s:[s]).map(token).join('')}</div>`;}
-function optionOrder(q){const a=q.opts.map((_,i)=>i);let seed=q.id.charCodeAt(0)*37+q.rank*131+17;for(let i=a.length-1;i>0;i--){seed=(seed*1664525+1013904223)>>>0;const j=seed%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
-function reviewIds(l){const ids=LESSONS.slice(0,l).flatMap(x=>x.items).filter(id=>answerFor(id).done);if(l===2)return LESSONS[0].items.filter(id=>answerFor(id).done);if(l===3||l===8)return ids.filter(id=>TYPE[Q[id].k].branch==='a');if(l===9)return ids.filter(id=>TYPE[Q[id].k].branch==='r');return ids;}
-function reviewRequired(l){return l>=2&&l<=7;}
-function reviewComplete(l){if(!reviewRequired(l))return true;const ids=reviewIds(l);return ids.length>0&&ids.every(id=>state.reviews[l]?.[id]);}
-function lessonComplete(l){return countLesson(l)===12&&reviewComplete(l.n);}
-function resetTransient(){const a=answerFor(currentQ()?.id);selected=[...(a.choice||[])];hintLevel=a.hints||0;feedback=a.seen&&!a.done?'reveal':null;}
-function go(vw){view=vw;if(vw==='train')resetTransient();render();window.scrollTo({top:0,behavior:'instant'});}
-function startLesson(n,index){state.lesson=n;state.index=index??Math.max(0,LESSONS[n-1].items.findIndex(id=>!answerFor(id).done));resetTransient();save();go('train');}
-function diagram(){return`<div class="diagram"><svg viewBox="0 0 330 220" aria-label="比较属性与关系的六类训练"><path d="M165 34V58M165 58H84V81M165 58H246V81" fill="none" stroke="#94ab91" stroke-width="1.2"/><text x="165" y="27" text-anchor="middle" fill="#245a49" font-size="15">比较，发现结构</text><rect x="18" y="82" width="132" height="41" rx="12" fill="#fffefb"/><rect x="180" y="82" width="132" height="41" rx="12" fill="#245a49"/><text x="84" y="108" text-anchor="middle" fill="#245a49" font-size="13">对象的属性</text><text x="246" y="108" text-anchor="middle" fill="white" font-size="13">对象之间的关系</text><path d="M84 124V151M246 124V151" stroke="#94ab91"/><text x="84" y="171" text-anchor="middle" fill="#627661" font-size="12">概括 · 辨别 · 交叉分类</text><text x="246" y="171" text-anchor="middle" fill="#627661" font-size="12">识别 · 区分 · 系统建构</text><text x="165" y="206" text-anchor="middle" fill="#c86843" font-size="12">找相同　/　找不同　/　同时比较</text></svg></div>`;}
-function render(){document.getElementById('app').innerHTML=`<div class="shell"><aside class="side"><div class="brand"><span class="mark">∩</span><div>比较之间<small>THE COMPARISON LAB</small></div></div><nav class="nav" aria-label="主要导航">${[['home','01','课程总览'],['train','02','进入训练'],['review','03','分类复盘'],['records','04','训练记录'],['about','05','依据与说明']].map(([id,no,label])=>`<button data-nav="${id}" class="${view===id?'active':''}" ${view===id?'aria-current="page"':''}><span>${no}</span>${label}</button>`).join('')}</nav><div class="sidefoot"><b>先比较，再作答。</b><p>把一次答案，变成一种方法。</p><div class="spacer"></div>基于 Klauer & Phye, 2008<br>方法结构复现 · 中文新编题</div></aside><main class="main"><header class="top"><div><div class="eyebrow">INDUCTIVE REASONING / 归纳思维</div><small>120 道题 · 10 堂课 · 六种比较方式</small></div><div class="topright"><small><span class="dot"></span><span id="storageStatus">${storageOK?'进度已保存在本浏览器':'当前环境无法保存，请导出进度'}</span></small><button class="small" id="saveHtml" title="保存后可在浏览器直接打开">保存离线网页</button></div></header><div id="page">${({home:home,train:train,review:review,records:records,about:about}[view])()}</div><div class="footer">比较之间 · 独立教学实现，非作者官方软件或原版 120 题题卡</div></main></div>`;bind();}
-function home(){const done=doneCount(),first=all.filter(q=>answerFor(q.id).done&&answerFor(q.id).first).length;return`<section class="hero"><div><div class="eyebrow">A SMALL PRACTICE, A TRANSFERABLE STRATEGY</div><div class="spacer"></div><h1>看见不同问题里的<br><em>同一种结构。</em></h1><p>先观察，再比较；提出规则，再反过来检查。用十堂有顺序的练习，熟悉一种可以带到新问题里的思考方法。</p><div class="row"><button class="primary" id="continue">${done?'继续第 '+String(state.lesson).padStart(2,'0')+' 课':'从第 01 课开始'}　→</button><button id="openAbout">了解训练依据</button></div></div>${diagram()}</section><section class="stats" aria-label="训练概览"><div class="stat"><b>${done}<small> / 120</small></b>已完成题目</div><div class="stat"><b>${LESSONS.filter(lessonComplete).length}<small> / 10</small></b>已完成课程</div><div class="stat"><b>${done?Math.round(first/done*100)+'%':'—'}</b>已完成题首次答对率</div></section><div class="sectiontitle"><h2>十堂课，一步步比较</h2><span class="badge">每课 12 道新题</span></div><div class="coursegrid">${LESSONS.map(l=>{const d=countLesson(l),fin=lessonComplete(l);return`<button class="course ${state.lesson===l.n?'current':''}" data-lesson="${l.n}"><div class="row between" style="width:100%"><span class="num">${String(l.n).padStart(2,'0')}</span>${fin?'<span class="badge">完成 ✓</span>':d===12?'<span class="badge orange">待归类复盘</span>':''}</div><h3>${esc(l.title)}</h3><small>${esc(l.tag)} · ${d}/12</small><div class="progress"><i style="width:${d/12*100}%"></i></div></button>`;}).join('')}</div><p class="overviewnote">可点击任意课程查看；按 01 → 10 的顺序训练，才能逐步经历论文设计的教学目标。归类复盘回看旧题，不计入 120 道新题。</p><div class="notice">本页遵循论文公开的六类操作、题量、材料配额与十课教学目标；题目和逐题分配由本页新编。完整原版题卡尚未核实，因此这里不标称“作者原版题库”。</div>`;}
-function strategy(q,a){if(state.lesson===1)return'';const lesson=state.lesson,required=lesson>=8,showOps=lesson>=3,showMethod=lesson>=5,ops=lesson===3&&TYPE[q.k].branch==='r'?[]:[['s','寻找相同'],['d','寻找不同'],['b','同时比较相同与不同']];return`<section class="strategy"><div class="row between"><h3>${required?'每题三问':lesson===2?'比较的是属性，还是关系':lesson<=4?'识别比较方式':'想一想，再比较'}</h3><small>${required?'完成文字记录后才能核对答案':'可记录，也可与陪练口头讨论'}</small></div><label for="branch">${showMethod?'① ':''}我需要比较什么？${required?' *':''}</label><div class="fields"><select id="branch"><option value="">选择：属性 / 关系</option><option value="a" ${a.ba==='a'?'selected':''}>对象的属性</option><option value="r" ${a.ba==='r'?'selected':''}>对象之间的关系</option></select>${showOps&&ops.length?`<select id="operation" aria-label="比较目标"><option value="">选择比较目标</option>${ops.map(([val,name])=>`<option value="${val}" ${a.op===val?'selected':''}>${name}</option>`).join('')}</select>`:''}</div>${showMethod?`<label for="note">② 我怎样比较，才能找出答案？${required?' *':''}</label><textarea id="note" maxlength="4000" placeholder="写出你准备比较的对象、规则或假设。">${esc(a.note||'')}</textarea><label for="verify">③ 我怎样用反向比较检查？${required?' *':''}</label><textarea id="verify" maxlength="4000" placeholder="寻找共同点后尝试找反例；发现不同后检查余项；关系变换可尝试逆向还原。">${esc(a.verify||'')}</textarea><small>文字按原样保存；网页不自动评判解释质量。核对时请与示例推理比较，可由陪练一起确认。</small>`:`<p class="overviewnote">${lesson===2?'属性是对象自身的特点；关系是两个或多个对象之间的联系。先学会区分它们，再到下一课细分比较方式。':lesson===3?'属性题可以寻找共同属性、辨别不合群项，或同时按两个属性交叉分类。':'关系题可以寻找一致的关系、发现被扰乱的关系，或同时比较两个方向的关系。'}</p>`}</section>`;}
-function train(){const l=LESSONS[state.lesson-1],q=currentQ(),a=answerFor(q.id),order=optionOrder(q),isDone=a.done;selected=isDone?(a.choice||[]):selected;return`<div class="row between" style="margin-bottom:19px"><div><span class="eyebrow">LESSON ${String(l.n).padStart(2,'0')} / 10</span><h2>${esc(l.title)}</h2></div><select id="lessonSelect" aria-label="切换课程" style="width:auto;max-width:180px">${LESSONS.map(x=>`<option value="${x.n}" ${x.n===l.n?'selected':''}>第 ${x.n} 课 · ${esc(x.tag)}</option>`).join('')}</select></div><div class="training"><section class="card" id="questionCard"><div class="row between"><span class="badge">${q.m==='V'?'语言材料':q.m==='F'?'图形材料':'数量材料'}</span><small>本课 ${state.index+1} / 12 · 题号 ${q.id}</small></div><h2 class="qtitle" tabindex="-1" id="qtitle">${esc(q.p)}</h2>${stimulus(q.stem)}<div class="row between" style="margin-bottom:10px"><small>${q.multi?'多选 · 选择所有符合的答案':'单选 · 选择一个答案'}</small><small>可用数字键选择</small></div><div class="options" role="group" aria-label="答案选项">${order.map((i,pos)=>`<button class="option ${selected.includes(i)?'selected':''} ${isDone&&q.answer.includes(i)?'correct':''}" data-option="${i}" aria-pressed="${selected.includes(i)}" ${isDone?'disabled':''}><span class="letter">${String.fromCharCode(65+pos)}</span>${token(q.opts[i])}</button>`).join('')}</div>${strategy(q,a)}<div id="hints">${hintHTML(q)}</div><div id="feedback" aria-live="polite">${isDone?successHTML(q,a):feedbackHTML(q)}</div><div class="qfoot"><button id="hint" class="flat small" ${isDone?'disabled':''}>给我一个提示${hintLevel?'（'+hintLevel+'/3）':''}</button><div class="row">${isDone?'<button class="small" id="revise">重新作答</button><button class="primary" id="next">'+(state.index===11?'查看本课完成情况':'下一题　→')+'</button>':`<button class="small" id="reveal">查看讲解</button><button class="primary" id="submit">核对答案　→</button>`}</div></div></section><aside class="aside"><div class="card"><h3>这堂课练什么</h3><p>${esc(l.goal)}</p><div class="progress"><i style="width:${countLesson(l)/12*100}%"></i></div><div class="dots">${l.items.map((id,i)=>`<button data-jump="${i}" class="${answerFor(id).done?'done':''} ${state.index===i?'here':''}" aria-label="第 ${i+1} 题${answerFor(id).done?'，已完成':''}">${i+1}</button>`).join('')}</div><small>完成 ${countLesson(l)}/12 · ${reviewRequired(l.n)?'含分类复盘目标':'巩固与练习'}</small><button class="small widebutton" id="lessonReview">本课归类复盘</button></div><div class="card"><span class="eyebrow">A COMPARISON ROUTINE</span><h3 style="margin-top:8px">${l.n===1?'先用自己的办法':'把过程说出来'}</h3>${l.n===1?'<p>先观察材料，按自己的想法解决。可以说说理由，也可以请陪练追问你是怎样想到的。这一课先熟悉题目。</p>':l.n<=4?'<ol class="steps"><li>确定是在比较属性还是关系。</li><li>观察题目里稳定的共同点或差异。</li><li>说说你为什么选择这个答案。</li></ol>':'<ol class="steps"><li>确定要比较的对象。</li><li>找相同、不同，或两者。</li><li>提出一个解释全部材料的规则。</li><li>反过来检查，有没有反例。</li></ol>'}<p>答错时可以继续尝试。提示和查看讲解都会记录，不会改写首次作答。</p><small>原方案通常由训练者引导；可请家长、教师或同伴一起讨论。</small></div></aside></div>`;}
-function hintHTML(q){if(!hintLevel)return'';const hints=['先把所有材料逐个看完，尝试只改变一个比较角度。',TYPE[q.k].hint,'试用这条规则，再自己验证：'+q.why];return hints.slice(0,hintLevel).map((x,i)=>`<div class="hint"><b>提示 ${i+1}</b>　${esc(x)}</div>`).join('');}
-function feedbackHTML(q){if(!feedback)return'';if(feedback==='wrong')return`<div class="feedback bad"><b>这个选择还不能解释全部材料。</b><p>${esc(hintLevel>=2?TYPE[q.k].hint:'把所选答案放回题目，逐项检查它与已知材料是否一致。')} 你可以调整后再次核对。</p></div>`;if(feedback==='class')return'<div class="feedback bad"><b>答案选择符合，但比较方式还需再看一眼。</b><p>重新区分对象的属性与对象之间的关系，再判断需要找相同、不同还是两者。</p></div>';if(feedback==='reveal')return`<div class="feedback bad"><b>先看讲解，再独立重做</b><p>${esc(q.why)}</p><p class="check"><b>检查思路：</b>${esc(q.check)}</p><small>看过讲解已记录。请完成自己的比较记录并选择答案；此题不计为独立首次答对。</small></div>`;return`<div class="feedback bad">${esc(feedback)}</div>`;}
-function successHTML(q,a){const lesson=state.lesson,type=TYPE[q.k],showType=lesson>=4||(lesson===3&&type.branch==='a');return`<div class="feedback"><b>${lesson===1?'这个答案符合材料。说说你是怎样想到的。':'答案一致。接着检查你是怎样想到的。'}</b><p>${esc(q.why)}</p>${lesson>=5?`<p class="check"><b>反向比较与复查：</b>${esc(q.check)}</p>`:''}${lesson>=2?`<p><span class="badge">${showType?type.name:branchName(type.branch)}</span>　${showType?esc(type.brief):'比较'+branchName(type.branch)}</p>`:''}${lesson>=5?`<label style="display:flex;align-items:flex-start;gap:9px;font-size:13px;margin-top:12px"><input id="checked" type="checkbox" style="width:auto;margin-top:6px" ${a.checked?'checked':''}>我已对照示例，检查自己的规则与复查过程。</label>`:''}</div>`;}
-function capture(){const q=currentQ(),old=answerFor(q.id);state.answers[q.id]={...old,choice:[...selected],ba:document.getElementById('branch')?.value??old.ba??'',op:document.getElementById('operation')?.value??old.op??'',note:document.getElementById('note')?.value??old.note??'',verify:document.getElementById('verify')?.value??old.verify??''};save();}
-function submit(){capture();const q=currentQ(),a=answerFor(q.id);if(!selected.length){toast('先选择一个答案。');return;}if(state.lesson>=8&&(!a.ba||!a.op||(a.note||'').trim().length<2||(a.verify||'').trim().length<2)){feedback='最后三课需要完成每题三问：选择比较对象和目标，并写下比较方法、复查方法。';render();return;}const right=selected.length===q.answer.length&&selected.every(i=>q.answer.includes(i));const classify=state.lesson<8||(a.ba===TYPE[q.k].branch&&a.op===TYPE[q.k].op);const attempts=(a.attempts||0)+1;state.answers[q.id]={...a,attempts,first:attempts===1?right&&classify&&!a.seen&&!(a.hints>0):a.first,choice:[...selected],hints:Math.max(a.hints||0,hintLevel),done:right&&classify,time:Date.now(),checked:false};feedback=right?(classify?null:'class'):'wrong';save();render();}
-function next(){capture();const q=currentQ(),a=answerFor(q.id);if(state.lesson>=5&&!a.checked){toast('请先对照讲解与反向检查，勾选确认。');return;}if(state.index<11){state.index++;resetTransient();save();render();document.getElementById('qtitle')?.focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}else{go('review');}}
-function review(){const l=state.lesson,ids=reviewIds(l),req=reviewRequired(l),r=state.reviews[l]||{},sorted=ids.filter(id=>r[id]).length,two=l===2;const buckets=two?[{id:'a',name:'属性题'},{id:'r',name:'关系题'}]:TYPES.filter(t=>l===3||l===8?t.branch==='a':l===9?t.branch==='r':true);if(!buckets.some(b=>b.id===reviewBucket))reviewBucket=buckets[0]?.id||'a';const display=reviewFilter==='todo'?ids.filter(id=>!r[id]):ids;const complete=countLesson(LESSONS[l-1])===12&&reviewComplete(l);return`<div class="row between"><div><div class="eyebrow">REVISIT & CLASSIFY / 第 ${l} 课</div><h2>回看旧题，识别比较方法</h2></div><select id="reviewLesson" style="width:auto" aria-label="选择复盘课程">${LESSONS.map(x=>`<option value="${x.n}" ${x.n===l?'selected':''}>第 ${x.n} 课</option>`).join('')}</select></div><div class="notice">${l===1?'第1课以自然尝试为主，不要求学习题型术语。这里可选做归类；完成新题后可直接进入第2课。':l===2?'依据论文第2课目标，重新区分第1课题目是在比较属性还是关系。':l===3?'依据第3课目标，把目前已遇到的属性题分为三类。':l===4?'依据第4课目标，归类已遇到的关系题，同时回顾属性题。':l<=7?'依据本课目标，再次练习把已遇到的题与六种比较方式对应。':'最后三课在每道新题中完成识别、比较、检查三问；本页的归类复盘可选做。'} 本页仅回看你已经完成的新题。</div><div class="card" style="margin-top:18px"><div class="row between"><div><h3>先选择一个分类，再点击属于它的题卡</h3><small>已归类 ${sorted} / ${ids.length} · ${req?'本课教学目标的一部分':'可选复盘'}</small></div><select id="reviewFilter" style="width:auto" aria-label="筛选题卡"><option value="all" ${reviewFilter==='all'?'selected':''}>显示全部</option><option value="todo" ${reviewFilter==='todo'?'selected':''}>只看未归类</option></select></div><div class="reviewbuckets">${buckets.map(b=>`<button class="small ${reviewBucket===b.id?'active':''}" data-bucket="${b.id}">${esc(b.name)}</button>`).join('')}</div><div class="reviewgrid">${display.map(id=>{const q=Q[id];return`<button class="reviewcard ${r[id]?'sorted':''}" data-sort="${id}" ${r[id]?'disabled':''}><span class="badge">${id} · 第 ${q.lesson} 课</span><div class="mini">${esc(q.p)}</div>${stimulus(q.stem)}<b>${r[id]?'已正确归类 ✓':'放入「'+esc(buckets.find(b=>b.id===reviewBucket)?.name||'')+'」'}</b></button>`;}).join('')}</div>${!ids.length?'<div class="empty">先进入本课训练。完成的题目会出现在这里。</div>':!display.length?'<div class="empty">这一轮全部归类完成。</div>':''}<div class="qfoot"><button id="backTrain">返回本课题目</button>${complete?`<button class="primary" id="nextLesson">${l<10?'本课完成 · 进入第 '+(l+1)+' 课':'十课完成 · 查看训练记录'}　→</button>`:`<small>${countLesson(LESSONS[l-1])<12?'还需完成本课新题。':'完成分类后即可结束本课。'}</small>`}</div></div>`;}
-function sortCard(id){const q=Q[id],correct=state.lesson===2?TYPE[q.k].branch:q.k;if(reviewBucket!==correct){toast('再想一想：'+TYPE[q.k].hint);return;}state.reviews[state.lesson]??={};state.reviews[state.lesson][id]=true;save();render();}
-function records(){const done=doneCount(),attempted=all.filter(q=>(answerFor(q.id).attempts||0)>0),independent=all.filter(q=>answerFor(q.id).done&&answerFor(q.id).first).length,checked=all.filter(q=>answerFor(q.id).done&&answerFor(q.id).checked).length;return`<div class="row between"><div><div class="eyebrow">YOUR PRACTICE / 练习轨迹</div><h2>记录方法，也记录进步</h2></div><div class="row"><button class="small" id="export">导出进度</button><button class="small" id="import">导入进度</button><input type="file" id="importFile" accept="application/json,.json" class="hidden"></div></div><div class="stats"><div class="stat"><b>${done}/120</b>已完成</div><div class="stat"><b>${independent}</b>独立首次答对</div><div class="stat"><b>${checked}</b>已确认复查</div></div><div class="split" style="margin-top:20px"><div class="card"><h3>六种比较方式</h3>${TYPES.map(t=>{const d=bank[t.id].filter(q=>answerFor(q.id).done).length;return`<div class="recordbar"><span>${t.name}</span><div class="progress"><i style="width:${d*5}%"></i></div><small>${d}/20</small></div>`;}).join('')}</div><div class="card"><h3>你的练习设置</h3><label for="learner"><small>学习者名称（选填，仅保存在当前浏览器）</small></label><input id="learner" maxlength="40" value="${esc(state.name)}" placeholder="输入姓名或昵称"><p class="overviewnote">可个人练习，也可请教师、家长或同伴陪练。论文原方案依靠训练者的提问、提示和讨论；网页的提示是对此的有限替代。</p><p class="overviewnote">已核对 ${attempted.length} 题。首次答对只统计没有提示或讲解帮助、并一次通过核对的题；重做不会改写首次记录。</p><button class="danger small" style="margin-top:15px" id="reset">清除本浏览器记录</button></div></div><div class="sectiontitle"><h3>作答与解释</h3><small>点击题号回到该题</small></div><div class="card tablewrap"><table class="table"><thead><tr><th>题目</th><th>比较方式</th><th>作答状态</th><th>我的比较方法 / 复查方法</th></tr></thead><tbody>${all.filter(q=>state.answers[q.id]).sort((a,b)=>a.lesson-b.lesson||LESSONS[a.lesson-1].items.indexOf(a.id)-LESSONS[b.lesson-1].items.indexOf(b.id)).map(q=>{const a=answerFor(q.id);return`<tr><td><button class="flat small" data-openq="${q.id}">${q.id}</button><br><small>第 ${q.lesson} 课</small></td><td>${TYPE[q.k].name}</td><td>${a.done?'完成':'进行中'}<br><small>${a.attempts||0}次核对 · ${a.hints||0}级提示${a.seen?' · 看过讲解':''}</small></td><td>${esc(a.note||'尚无文字记录')}<br><small>${esc(a.verify||'尚无复查记录')}</small></td></tr>`;}).join('')||'<tr><td colspan="4" class="empty">完成第一题后，这里会出现你的记录。</td></tr>'}</tbody></table></div><div class="notice">这里只呈现本套新编练习的完成情况，不能据此推算智商、诊断认知能力或证明学习迁移。论文中原方案的研究效果不能直接用于本网页。</div>`;}
-function about(){return`<div class="eyebrow">METHOD & PROVENANCE / 可核查的依据</div><h2>忠实落实公开方法，明确标注新编材料</h2><div class="stack source" style="margin-top:22px"><section class="card"><h3>作者与原始文献</h3><p>你上传的《学习迁移：为什么我们学到的往往比教给我们的更多》作者为 <b>卡尔·约瑟夫·克劳尔（Karl Josef Klauer）</b>。电子书扉页及作者简介均可核实；原书版权页标注2011年第一版。</p><p>本页主要依据：Klauer, K. J., & Phye, G. D. (2008). <i>Inductive Reasoning: A Training Approach.</i> Review of Educational Research, 78(1), 85–123. DOI: 10.3102/0034654307313402。</p><div class="row"><a href="https://journals.sagepub.com/doi/10.3102/0034654307313402" target="_blank" rel="noopener noreferrer">论文及表1、表2 ↗</a><a href="https://www.researchgate.net/publication/242148990_Inductive_Reasoning_A_Training_Approach" target="_blank" rel="noopener noreferrer">论文全文入口 ↗</a><a href="https://eric.ed.gov/?id=EJ787070" target="_blank" rel="noopener noreferrer">ERIC 文献记录 ↗</a></div></section><section class="card"><h3>本页保留了哪些设计</h3><ul><li><b>120道新题，六类各20题：</b>对应论文 Training Format（第91–92页），三问与反向检查见第92–93页。</li><li><b>语言、图形、数量材料各40题：</b>采用论文 Program II / III 的材料配额。不是面向不识字儿童、主要非言语的 Program I。</li><li><b>10堂课，每课12道新题：</b>教学目标依表2逐课实现；不把10课简化为同样的题型随机刷题。</li><li><b>区分属性与关系：</b>再分别练习寻找相同、不同、同时找两者，形成表1中的六类认知操作。</li><li><b>复盘旧题的类别：</b>第2课回看第1课，第3课归类属性题，第4课归类关系题并回顾属性，第5–7课继续归类复习。回看不增加新题数。</li><li><b>第8–10课每题三问：</b>要比较什么、如何比较、如何检验；保留文字记录，并用反向比较检查。原论文强调的是自我调控，不是单纯追求选对。</li></ul></section><section class="card tablewrap"><h3>六类认知操作 · 对应论文表1</h3><table class="table"><thead><tr><th>操作</th><th>比较对象</th><th>比较目标</th><th>题目形式</th></tr></thead><tbody>${TYPES.map((t,i)=>`<tr><td>${t.name}<br><small>${t.en}</small></td><td>${branchName(t.branch)}</td><td>${opName(t.op)}</td><td>${['成组、扩充类别、发现共同属性','辨别不合群的对象','四格、六格、九格的双属性分类表','续列、排序、类比','发现被扰乱的序列或关系','同时检验行列关系的矩阵'][i]}</td></tr>`).join('')}</tbody></table></section><section class="card tablewrap"><h3>十堂课目标 · 对应论文表2</h3><table class="table"><thead><tr><th>课程</th><th>教学目标</th><th>本页新题配额</th></tr></thead><tbody>${LESSONS.map(l=>`<tr><td>${l.n} · ${l.title}</td><td>${l.goal}</td><td>${l.counts.map((c,i)=>c?TYPES[i].name+'×'+c:'').filter(Boolean).join('、')}</td></tr>`).join('')}</tbody></table><p><small>表2规定教学目标，并未公开原版逐题顺序。上列每课的六类题量是本页为同时满足每课12题、每类20题而作的实现分配，不能称为作者原始逐题编排。</small></p></section><section class="card"><h3>补充核实：原版样题、训练周期与版本差异</h3><p><b>已公开的原版样例：</b>Klauer、Willmes 与 Phye（2002）的论文附录在印刷第21–23页给出了六类训练的六道样题。它们可以用来核对认知操作的含义，但没有提供完整120题及其原始题号与课次对应。本页没有把这些图示重新绘制成所谓原题，全部练习仍为中文新编题。</p><p><b>有文献依据的训练周期：</b>2002年该项实验持续五周，每周两次，每次最多45分钟，共十次训练，由有经验的心理学家带领约3–5人小组。可以参考这一周期安排练习；该时长属于特定实验条件，不能视为所有版本统一的课堂长度。</p><p><b>版本边界：</b>本页的十课教学目标与语言、图形、数量各40题的配额采用2008年论文对 Program II / III 的说明。作者1990年介绍的早期低龄儿童方案为12课×10题；它和本页采用的10课×12题结构需要区分。</p><p><b>本项目的实现选择：</b>每课各题型的配额、具体题序、三级提示、重试方式、讲解出现时机、必填文字与复查勾选，均为本网页设计。论文提供了引导比较、三问和反向检查的依据，但没有公开本页这些具体交互规则。这里也没有把提示撤除时机标为作者原版的渐隐程序。</p><div class="row"><a href="https://gwern.net/doc/dual-n-back/2002-klauer.pdf#page=8" target="_blank" rel="noopener noreferrer">2002年研究：训练安排，第8页 ↗</a><a href="https://gwern.net/doc/dual-n-back/2002-klauer.pdf#page=21" target="_blank" rel="noopener noreferrer">六类原版样题，附录第21–23页 ↗</a><a href="https://www.pedocs.de/volltexte/2010/840/pdf/Klauer_Denktraining_Schulanfaenger_1990_W_D_A.pdf" target="_blank" rel="noopener noreferrer">1990年早期低龄方案，第152页 ↗</a></div></section><section class="card"><h3>使用方式与复现范围</h3><p>建议按课程顺序，留出足够时间让学习者解释规则。原方案适用于一对一或小组引导。本页不强制计时，不设限时失败；是否分段完成可由陪练按学习者情况安排。</p><p>先独立尝试，遇到困难逐级使用提示；核对后阅读推理与反向检验，再确认自己的解释。最后三课要求实际记录三问，网页仅检查题目答案与题型分类，不自动判断文字解释是否合理。</p><p><b>题库边界：</b>本页120题均为新编；未取得并逐题核对1989、1991、1993年原训练手册的完整题卡，不属于官方软件或原版题库复刻。本页也未进行独立效果验证。</p><p><b>离线与隐私：</b>页面不调用网络接口，不加载外部图片、字体或脚本。保存为HTML后用浏览器直接打开即可。进度使用当前浏览器本地存储；隐私模式、预览环境或文件位置变化可能影响保存，请按需导出JSON进度备份。</p><button id="saveHtmlAbout" class="primary">保存这份离线 HTML 网页</button></section></div>`;}
-function download(name,content,type){const url=URL.createObjectURL(new Blob([content],{type}));const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);}
-function saveHtml(){captureIfTrain();const copy=document.documentElement.cloneNode(true);copy.querySelector('#app').innerHTML='';const toastEl=copy.querySelector('#toast');toastEl.textContent='';toastEl.classList.add('hidden');copy.querySelector('#resetDialog').removeAttribute('open');download('比较之间-克劳尔归纳训练.html','<!DOCTYPE html>\n'+copy.outerHTML,'text/html;charset=utf-8');toast('已请求保存网页。用浏览器打开 HTML 即可离线使用。');}
-function exportProgress(){captureIfTrain();download('比较之间-训练进度-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(state,null,2),'application/json');}
-function captureIfTrain(){if(view==='train')capture();}
-function bind(){document.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{captureIfTrain();go(b.dataset.nav);});document.querySelectorAll('[data-lesson]').forEach(b=>b.onclick=()=>startLesson(+b.dataset.lesson));const on=(id,fn)=>{const el=document.getElementById(id);if(el)el.onclick=fn;};on('saveHtml',saveHtml);on('saveHtmlAbout',saveHtml);on('continue',()=>startLesson(state.lesson,state.index));on('openAbout',()=>go('about'));on('submit',submit);on('next',next);on('hint',()=>{capture();hintLevel=Math.min(3,hintLevel+1);const q=currentQ();state.answers[q.id]={...answerFor(q.id),hints:Math.max(answerFor(q.id).hints||0,hintLevel)};save();render();});on('reveal',()=>{capture();const q=currentQ();state.answers[q.id]={...answerFor(q.id),seen:true};feedback='reveal';save();render();});on('revise',()=>{capture();const q=currentQ();state.answers[q.id]={...answerFor(q.id),done:false,checked:false};resetTransient();save();render();});on('lessonReview',()=>{capture();go('review');});on('backTrain',()=>go('train'));on('nextLesson',()=>{if(state.lesson<10)startLesson(state.lesson+1);else go('records');});on('export',exportProgress);on('import',()=>document.getElementById('importFile').click());on('reset',()=>document.getElementById('resetDialog').showModal());document.querySelectorAll('[data-option]').forEach(b=>b.onclick=()=>{const q=currentQ(),i=+b.dataset.option;selected=q.multi?(selected.includes(i)?selected.filter(x=>x!==i):[...selected,i]):[i];document.querySelectorAll('[data-option]').forEach(x=>{const on=selected.includes(+x.dataset.option);x.classList.toggle('selected',on);x.setAttribute('aria-pressed',String(on));});if(feedback==='wrong'){feedback=null;document.getElementById('feedback').innerHTML='';}capture();});document.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>{capture();state.index=+b.dataset.jump;resetTransient();save();render();});document.querySelectorAll('[data-bucket]').forEach(b=>b.onclick=()=>{reviewBucket=b.dataset.bucket;render();});document.querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>sortCard(b.dataset.sort));document.querySelectorAll('[data-openq]').forEach(b=>b.onclick=()=>{const q=Q[b.dataset.openq];startLesson(q.lesson,LESSONS[q.lesson-1].items.indexOf(q.id));});const ls=document.getElementById('lessonSelect');if(ls)ls.onchange=()=>{capture();startLesson(+ls.value);};const rl=document.getElementById('reviewLesson');if(rl)rl.onchange=()=>{state.lesson=+rl.value;state.index=0;save();render();};const rf=document.getElementById('reviewFilter');if(rf)rf.onchange=()=>{reviewFilter=rf.value;render();};['branch','operation','note','verify'].forEach(id=>{const el=document.getElementById(id);if(el)el.oninput=capture;});const ck=document.getElementById('checked');if(ck)ck.onchange=()=>{const q=currentQ();state.answers[q.id]={...answerFor(q.id),checked:ck.checked};save();};const learner=document.getElementById('learner');if(learner)learner.oninput=()=>{state.name=learner.value;save();};const file=document.getElementById('importFile');if(file)file.onchange=async()=>{if(!file.files[0])return;try{if(file.files[0].size>3000000)throw Error('文件过大');const parsed=validate(JSON.parse(await file.files[0].text()));state=parsed;save();resetTransient();render();toast('训练进度已导入。');}catch(e){toast('无法导入：'+e.message);}};}
-document.getElementById('cancelReset').onclick=()=>document.getElementById('resetDialog').close();
-document.getElementById('confirmReset').onclick=()=>{state=initial();resetTransient();save();document.getElementById('resetDialog').close();go('home');};
-document.addEventListener('keydown',e=>{if(view!=='train'||e.ctrlKey||e.metaKey||e.altKey||document.getElementById('resetDialog').open)return;if(['INPUT','TEXTAREA','SELECT','BUTTON'].includes(document.activeElement?.tagName))return;const q=currentQ();if(/^[1-6]$/.test(e.key)&&!answerFor(q.id).done){document.querySelectorAll('[data-option]')[+e.key-1]?.click();e.preventDefault();}if(e.key==='Enter'){document.getElementById(answerFor(q.id).done?'next':'submit')?.click();e.preventDefault();}});
-window.addEventListener('beforeunload',captureIfTrain);
-// 导出网页时可连同题库结构自检；此处不包含任何测试分数或智商推算。
-function auditBank(){return{total:all.length,classes:Object.fromEntries(TYPES.map(t=>[t.id,all.filter(q=>q.k===t.id).length])),materials:Object.fromEntries(MODES.map(m=>[m,all.filter(q=>q.m===m).length])),lessons:LESSONS.map(l=>l.items.length),unique:new Set(all.map(q=>q.id)).size,invalid:all.filter(q=>!q.answer.length||q.answer.some(i=>i<0||i>=q.opts.length)||(!q.multi&&q.answer.length!==1)).map(q=>q.id)};}
-render();
+/* Klauer method adaptation: original instances, explicit model checks. No original item-bank claim. */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.KlauerEngine = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  const VERSION = '2.0.0';
+  const TYPES = [
+    { id: 'G', name: '概括', branch: '属性', operation: '寻找相同', source: '2008，表1：Class formation / Class expansion / Finding common attributes' },
+    { id: 'D', name: '辨别', branch: '属性', operation: '寻找不同', source: '2008，表1：Identifying disturbing items' },
+    { id: 'C', name: '交叉分类', branch: '属性', operation: '同时比较相同与不同', source: '2008，表1：4 / 6 / 9-fold scheme；2002，附录第23页' },
+    { id: 'R', name: '关系识别', branch: '关系', operation: '寻找相同', source: '2008，表1：Series completion / Ordered series / Analogy' },
+    { id: 'F', name: '关系区分', branch: '关系', operation: '寻找不同', source: '2008，表1：Disturbed series；2002，附录第22页要求找错并修复' },
+    { id: 'S', name: '系统建构', branch: '关系', operation: '同时比较相同与不同', source: '2008，表1：Matrices；2002，附录第23页' }
+  ];
+  const TYPE = Object.fromEntries(TYPES.map(t => [t.id, t]));
+  const MODES = ['V', 'F', 'N'];
+  const MODE_NAMES = { V: '文字资料', F: '图形资料', N: '数量资料' };
+  const LESSONS = [
+    ['先用自己的办法', '熟悉材料和训练情境，先尝试解决，再说说你的想法。', [2, 2, 2, 2, 2, 2]],
+    ['看特点，还是看联系', '区分对象自身的特点与对象之间的关系，回看第1课题目。', [2, 2, 2, 2, 2, 2]],
+    ['特点的三种比较', '比较共同属性、不同属性及两个交叉的分类维度。', [4, 4, 4, 0, 0, 0]],
+    ['联系的三种比较', '发现统一关系、修复关系中断，并联合比较多个关系。', [0, 0, 0, 4, 4, 4]],
+    ['找相同，也找反例', '练习发现共同属性或关系，并用相反方向的比较检查。', [6, 0, 0, 6, 0, 0]],
+    ['找不同，再让它一致', '发现属性或关系的异常；修复之后，检验整体是否一致。', [0, 6, 0, 0, 6, 0]],
+    ['让两个条件都成立', '同时处理相同与不同；检查分类和关系的两个维度。', [0, 0, 6, 0, 0, 6]],
+    ['自己监控：对象特点', '复习属性分支，每题问自己：看什么、怎么比较、怎么检查。', [4, 4, 4, 0, 0, 0]],
+    ['自己监控：对象联系', '复习关系分支，每题实践识别、解决与反向检查。', [0, 0, 0, 4, 4, 4]],
+    ['把方法带到新题', '混合练习六类任务，不先显示题型或规律，独立选择比较方法。', [2, 2, 2, 2, 2, 2]]
+  ].map((x, i) => ({ n: i + 1, title: x[0], goal: x[1], counts: x[2], items: [] }));
+  const MATERIALS = ['木制', '纸制', '金属', '布制'];
+  const CLOSURES = ['扣式', '拉链', '绳结', '插片'];
+  const MARKS = ['叶标', '云标', '山标', '星标'];
+  const SHAPES = ['圆形', '方形', '三角形', '菱形'];
+  const COLORS = ['橙色', '蓝色', '绿色', '紫色'];
+  const WORDS = ['山川月', '风雨雪', '林泉石', '春夏冬', '星云海', '舟桥岸', '竹兰梅', '红青白', '松柏杉', '门窗墙', '日月星', '河湖海', '花叶果', '木纸布', '东南西', '溪谷峰', '田园村', '笔墨砚', '江河湖', '琴棋书', '晨午夜', '草树花', '舟车桥', '雨雪霜'];
+  const PREFIXES = ['新', '小', '青', '明', '早', '南', '白'];
+  const SUFFIXES = ['站', '号', '门', '箱', '格', '坊', '屋'];
+  const clone = x => JSON.parse(JSON.stringify(x));
+  const mod = (x, m) => ((x % m) + m) % m;
+  const equal = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  const assert = (ok, message) => { if (!ok) throw new Error(message); };
+  const cardKey = card => JSON.stringify(card);
+  function random(seed) {
+    let x = seed >>> 0;
+    return {
+      int(n) { x = (1664525 * x + 1013904223) >>> 0; return Math.floor(x / 4294967296 * n); },
+      shuffle(items) { const a = items.slice(); for (let i = a.length - 1; i > 0; i--) { const j = this.int(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+    };
+  }
+  function combinations(items, k) {
+    const output = [];
+    function visit(start, acc) {
+      if (acc.length === k) { output.push(acc); return; }
+      for (let i = start; i <= items.length - (k - acc.length); i++) visit(i + 1, acc.concat(items[i]));
+    }
+    visit(0, []); return output;
+  }
+  function domain(mode) { return mode === 'N' ? 8 : 4; }
+  function vector(mode, rng) { return [rng.int(domain(mode)), rng.int(domain(mode)), rng.int(domain(mode))]; }
+  function attrCard(mode, v) {
+    if (mode === 'F') return { kind: 'figure', shape: v[0], color: v[1], count: v[2] + 1, filled: true, rotation: 0, size: 1 };
+    if (mode === 'N') return { kind: 'number', value: (v[0] + 1) * 100 + (v[1] + 1) * 10 + v[2] + 1 };
+    return { kind: 'record', fields: [['材质', MATERIALS[v[0]]], ['封口', CLOSURES[v[1]]], ['标记', MARKS[v[2]]]] };
+  }
+  function dimension(mode, i) { return mode === 'F' ? ['形状', '颜色', '数量'][i] : mode === 'N' ? ['百位数字', '十位数字', '个位数字'][i] : ['材质', '封口', '标记'][i]; }
+  function attribute(mode, i, value) {
+    return mode === 'F' ? [SHAPES[value], COLORS[value], (value + 1) + '个图形'][i] : mode === 'N' ? String(value + 1) : [MATERIALS[value], CLOSURES[value], MARKS[value]][i];
+  }
+  function commonDims(vecs) { return [0, 1, 2].filter(d => vecs.every(v => v[d] === vecs[0][d])); }
+  function ruleText(mode, mask, target) { return mask.map(d => dimension(mode, d) + '都是「' + attribute(mode, d, target[d]) + '」').join('，'); }
+  function matches(v, mask, target) { return mask.every(d => v[d] === target[d]); }
+  function constrained(mode, mask, target, rng, differ = false) {
+    const v = vector(mode, rng); mask.forEach(d => { v[d] = target[d]; });
+    if (differ) { const d = mask[rng.int(mask.length)]; v[d] = mod(target[d] + 1 + rng.int(domain(mode) - 1), domain(mode)); }
+    return v;
+  }
+  function distinctVectors(make, n) {
+    const out = [], seen = new Set();
+    for (let tries = 0; out.length < n && tries < 1500; tries++) { const v = make(); if (!seen.has(JSON.stringify(v))) { seen.add(JSON.stringify(v)); out.push(v); } }
+    assert(out.length === n, 'Unable to construct distinct cards'); return out;
+  }
+  function choices(correct, distractors, rng) {
+    const seen = new Set([cardKey(correct)]), list = [{ card: correct, correct: true }];
+    for (const card of distractors) {
+      const key = cardKey(card);
+      if (!seen.has(key)) { seen.add(key); list.push({ card, correct: false }); }
+      if (list.length === 4) break;
+    }
+    assert(list.length >= 2, 'Need distinct alternatives');
+    const shuffled = rng.shuffle(list);
+    return { options: shuffled.map(x => x.card), answer: shuffled.findIndex(x => x.correct) };
+  }
+  function attrChoices(mode, mask, target, rng, reverse) {
+    const cards = distinctVectors(() => constrained(mode, mask, target, rng, reverse), reverse ? 1 : 1);
+    const other = distinctVectors(() => constrained(mode, mask, target, rng, !reverse), 3);
+    const result = choices(attrCard(mode, cards[0]), other.map(v => attrCard(mode, v)), rng);
+    return { ...result, model: { vectors: result.options.map(card => card), reverse } };
+  }
+  function buildG(mode, j, rng) {
+    const mask = j >= 4 && j % 3 !== 0 ? rng.shuffle([0, 1, 2]).slice(0, 2) : [j % 3];
+    const target = vector(mode, rng), form = j % 3 === 0;
+    let evidence, main, model;
+    if (form) {
+      let found;
+      for (let tries = 0; tries < 1000 && !found; tries++) {
+        const members = distinctVectors(() => constrained(mode, mask, target, rng), 3);
+        const rest = distinctVectors(() => constrained(mode, mask, target, rng, true), 2);
+        const records = rng.shuffle(members.map(v => ({ v, yes: true })).concat(rest.map(v => ({ v, yes: false }))));
+        const vecs = records.map(x => x.v), global = commonDims(vecs);
+        const scored = combinations([0, 1, 2, 3, 4], 3).map(indices => ({ indices, score: commonDims(indices.map(i => vecs[i])).filter(d => !global.includes(d)).length }));
+        const best = Math.max(...scored.map(x => x.score)), winners = scored.filter(x => x.score === best);
+        if (best > 0 && winners.length === 1 && winners[0].indices.every(i => records[i].yes)) found = { vecs, expected: winners[0].indices, winners, best };
+      }
+      assert(found, 'Group formation uniqueness');
+      evidence = found.expected.map(i => attrCard(mode, found.vecs[i]));
+      main = { kind: 'group', prompt: '哪三张最能组成一组？比较画面中的特点，把共同特征最集中的三张选出来。', options: found.vecs.map(v => attrCard(mode, v)), answer: found.expected };
+      model = { family: 'class-formation', vectors: found.vecs, mask, target, expected: found.expected, bestScore: found.best };
+    } else {
+      let examples;
+      for (let tries = 0; tries < 300; tries++) {
+        examples = distinctVectors(() => constrained(mode, mask, target, rng), 3);
+        if (equal(commonDims(examples).slice().sort(), mask.slice().sort())) break;
+      }
+      assert(equal(commonDims(examples).slice().sort(), mask.slice().sort()), 'Expansion examples must expose intended commonality only');
+      evidence = examples.map(v => attrCard(mode, v));
+      const correct = constrained(mode, mask, target, rng);
+      const wrong = [];
+      for (let k = 0; k < 9; k++) wrong.push(attrCard(mode, constrained(mode, mask, target, rng, true)));
+      main = { kind: 'choice', prompt: '先比较这三张。哪一张可以加入同一组？', display: { kind: 'cards', cards: evidence }, ...choices(attrCard(mode, correct), wrong, rng) };
+      model = { family: 'class-expansion', vectors: examples, mask, target, expected: main.answer };
+    }
+    const check = attrChoices(mode, mask, target, rng, true);
+    return { main, check: { kind: 'choice', prompt: '换个方向检查：下面哪张会破坏你刚才发现的共同特征？', display: { kind: 'cards', cards: evidence }, options: check.options, answer: check.answer }, explanation: '这组对象的' + ruleText(mode, mask, target) + '。其他特点可以变化；比较的重点是稳定的共同点。', checkExplanation: '找到共同点后，再主动寻找不符合它的对象。检查题中的异项破坏了上述共同点。', model, verify: () => main.kind === 'group' ? model.expected.length === 3 : true };
+  }
+  function buildD(mode, j, rng) {
+    const mask = j >= 4 ? rng.shuffle([0, 1, 2]).slice(0, 2) : [j % 3], target = vector(mode, rng);
+    let found;
+    for (let tries = 0; tries < 1000 && !found; tries++) {
+      const normal = distinctVectors(() => constrained(mode, mask, target, rng), 4);
+      const odd = constrained(mode, mask, target, rng, true);
+      const records = rng.shuffle(normal.map(v => ({ v, odd: false })).concat([{ v: odd, odd: true }]));
+      const vecs = records.map(x => x.v), global = commonDims(vecs);
+      const scores = vecs.map((_, i) => commonDims(vecs.filter((_, k) => k !== i)).filter(d => !global.includes(d)).length);
+      const max = Math.max(...scores), win = scores.map((v, i) => v === max ? i : -1).filter(i => i >= 0);
+      if (max > 0 && win.length === 1 && records[win[0]].odd) found = { vecs, answer: win[0] };
+    }
+    assert(found, 'Discrimination uniqueness');
+    const main = { kind: 'choice', prompt: '哪一张打破了其余对象的共同点？先比较，再选择。', options: found.vecs.map(v => attrCard(mode, v)), answer: found.answer };
+    const check = attrChoices(mode, mask, target, rng, false);
+    const evidence = distinctVectors(() => constrained(mode, mask, target, rng), 3).map(v => attrCard(mode, v));
+    return { main, check: { kind: 'choice', prompt: '反过来检查共同点：哪张新卡片能加入剩余的一组？', display: { kind: 'cards', cards: evidence }, options: check.options, answer: check.answer }, explanation: '其余四张的' + ruleText(mode, mask, target) + '。异项至少有一项不符合。', checkExplanation: '发现差异后，需要确认留下的对象确实共享某一特点。新卡片也必须保留这个共同点。', model: { family: 'discrimination', vectors: found.vecs, mask, target, expected: found.answer }, verify: () => found.vecs.filter(v => matches(v, mask, target)).length === 4 };
+  }
+  function buildC(mode, j, rng) {
+    const dims = rng.shuffle([0, 1, 2]), a = dims[0], b = dims[1], nuisance = dims[2];
+    const nr = j >= 5 ? 3 : 2, nc = j % 3 === 0 ? 2 : 3;
+    const rows = rng.shuffle(Array.from({ length: domain(mode) }, (_, i) => i)).slice(0, nr);
+    const cols = rng.shuffle(Array.from({ length: domain(mode) }, (_, i) => i)).slice(0, nc);
+    const cells = [], vectors = [];
+    for (let r = 0; r < nr; r++) {
+      const line = [], vecLine = [];
+      for (let c = 0; c < nc; c++) { const v = vector(mode, rng); v[a] = rows[r]; v[b] = cols[c]; v[nuisance] = (r + c + j) % domain(mode); vecLine.push(v); line.push(attrCard(mode, v)); }
+      cells.push(line); vectors.push(vecLine);
+    }
+    const r = rng.int(nr), c = rng.int(nc), probeV = clone(vectors[r][c]); probeV[nuisance] = mod(probeV[nuisance] + 1, domain(mode));
+    const answer = r * nc + c;
+    const main = { kind: 'place', prompt: '表格没有分类标题。先发现它怎样分组，再把新卡片放进最合适的一格；它可以和该格原有卡片放在一起。', display: { kind: 'classification', cells, probe: attrCard(mode, probeV) }, options: cells.flat().map((_, i) => ({ kind: 'position', value: i + 1 })), answer };
+    const placements = [], expectedBad = rng.int(4), usedPlacementKeys = new Set();
+    for (let k = 0; k < 4; k++) {
+      let placement;
+      for (let tries = 0; tries < 100; tries++) {
+        const rr = rng.int(nr), cc = rng.int(nc), v = vector(mode, rng); v[a] = rows[rr]; v[b] = cols[cc];
+        if (k === expectedBad) { if (rng.int(2)) v[a] = rows[(rr + 1) % nr]; else v[b] = cols[(cc + 1) % nc]; }
+        const candidate = { kind: 'placement', card: attrCard(mode, v), position: rr * nc + cc + 1 };
+        if (!usedPlacementKeys.has(cardKey(candidate))) { placement = candidate; usedPlacementKeys.add(cardKey(candidate)); break; }
+      }
+      assert(placement, 'Distinct classification checks'); placements.push(placement);
+    }
+    return { main, check: { kind: 'choice', prompt: '反向查验：沿用你发现的分类办法，哪一个归位建议不成立？', display: { kind: 'grid', cells }, options: placements, answer: expectedBad }, explanation: '同一行保持' + dimension(mode, a) + '相同，同一列保持' + dimension(mode, b) + '相同；' + dimension(mode, nuisance) + '可以变化。新卡片需同时和目标格共享这两个特点，所以应放入第' + (answer + 1) + '格。', checkExplanation: '检查每一个归位建议的两个分类维度，不能只符合一行或一列。错误建议至少与目标格的一项分类属性不一致。', model: { family: 'cross-classification', dimensions: [a, b], nuisance, vectors, probe: probeV, rows, cols, expected: answer, labelsGiven: false }, verify: () => rows.indexOf(probeV[a]) * nc + cols.indexOf(probeV[b]) === answer && probeV[nuisance] !== vectors[r][c][nuisance] };
+  }
+  const num = value => ({ kind: 'number', value });
+  const word = text => ({ kind: 'word', text });
+  function relationalModel(mode, j, rng) {
+    const family = j % 7;
+    if (mode === 'N') {
+      const slopes = [1, 1, 2, 1, 2, 3, 2], adds = [2 + j, -(2 + j), 0, 5 + j, 1, -1, 3];
+      const a = slopes[family], b = adds[family];
+      return {
+        mode, family: 'affine-' + a + '-' + b,
+        make: () => num(8 + rng.int(30)),
+        apply: x => num(a * x.value + b), inverse: x => num((x.value - b) / a),
+        describe: a === 1 ? '每一步' + (b > 0 ? '加' : '减') + Math.abs(b) : '每一步先乘' + a + (b ? (b > 0 ? '，再加' : '，再减') + Math.abs(b) : ''),
+        distractors: x => [num(x.value + 1), num(x.value - 1), num(x.value + Math.abs(b || a)), num(x.value + 2 * a), num(x.value - 3)],
+        steps: family < 2 || family === 3 ? 5 : 4
+      };
+    }
+    if (mode === 'V') {
+      const pre = PREFIXES[j % PREFIXES.length], suf = SUFFIXES[j % SUFFIXES.length];
+      const rotate = text => text.slice(1) + text[0];
+      const unrotate = text => text[text.length - 1] + text.slice(0, -1);
+      const swap = text => text[1] + text[0] + text.slice(2);
+      const reverse = text => Array.from(text).reverse().join('');
+      const applyText = text => [() => pre + text, () => text + suf, () => reverse(text), () => rotate(text), () => swap(text), () => text + suf + suf, () => pre + text + suf][family]();
+      const inverseText = text => [() => text.slice(1), () => text.slice(0, -1), () => reverse(text), () => unrotate(text), () => swap(text), () => text.slice(0, -2), () => text.slice(1, -1)][family]();
+      const explain = ['在词片最前面加「' + pre + '」', '在词片最后加「' + suf + '」', '把字符次序完全反过来', '把最前面的字符移到最后', '交换前两个字符的位置，保留其余字符', '在词片最后加两个「' + suf + '」', '在最前面加「' + pre + '」，同时在最后加「' + suf + '」'][family];
+      return { mode, family: 'word-' + family, make: () => word(WORDS[rng.int(WORDS.length)]), apply: x => word(applyText(x.text)), inverse: x => word(inverseText(x.text)), describe: explain, steps: 5,
+        distractors: x => [word(reverse(x.text)), word(rotate(x.text)), word(swap(x.text)), word(x.text + suf), word(pre + x.text), word(x.text.slice(1)), word(x.text + pre)] };
+    }
+    const make = () => ({ kind: 'figure', shape: family === 2 || family === 3 || family === 6 ? 4 : rng.int(4), color: rng.int(4), count: 1 + rng.int(2), filled: true, rotation: rng.int(4), size: 1 });
+    const apply = x => { const y = clone(x); if (family === 0) y.count++; if (family === 1) y.count += 2; if (family === 2) y.rotation = mod(y.rotation + 1, 4); if (family === 3) y.rotation = mod(y.rotation + 2, 4); if (family === 4) y.filled = !y.filled; if (family === 5) y.count *= 2; if (family === 6) { y.count++; y.rotation = mod(y.rotation + 1, 4); } return y; };
+    const inverse = x => { const y = clone(x); if (family === 0) y.count--; if (family === 1) y.count -= 2; if (family === 2) y.rotation = mod(y.rotation - 1, 4); if (family === 3) y.rotation = mod(y.rotation - 2, 4); if (family === 4) y.filled = !y.filled; if (family === 5) y.count /= 2; if (family === 6) { y.count--; y.rotation = mod(y.rotation - 1, 4); } return y; };
+    const describe = ['每次增加一个图形，保留其他特点', '每次增加两个图形，保留其他特点', '每个箭头顺时针转90°', '每个箭头旋转180°', '实心与空心互换，保留其他特点', '每次把图形数量乘2', '数量增加1，同时每个箭头顺时针转90°'][family];
+    const distractors = x => {
+      if (family === 4) return [{ ...x, filled: !x.filled }, { ...x, count: x.count + 1 }];
+      if (family === 2 || family === 3) return [1, 2, 3].map(d => ({ ...x, rotation: mod(x.rotation + d, 4) }));
+      if (family === 6) return [{ ...x, count: x.count + 1 }, { ...x, rotation: mod(x.rotation + 1, 4) }, { ...x, count: Math.max(1, x.count - 1) }, { ...x, rotation: mod(x.rotation + 2, 4) }];
+      return [1, -1, 2, 3, -2].filter(d => x.count + d > 0).map(d => ({ ...x, count: x.count + d }));
+    };
+    return { mode, family: 'figure-' + family, make, apply, inverse, describe, distractors, steps: family === 5 ? 4 : 5 };
+  }
+  function inverseCheck(model, rng) {
+    const before = model.make(), after = model.apply(before);
+    return { kind: 'choice', prompt: '用另一组材料反向检查：下方是变化后的结果，哪张是变化之前的样子？', display: { kind: 'result', card: after }, ...choices(before, model.distractors(before), rng), before, after };
+  }
+  function buildR(mode, j, rng) {
+    const model = relationalModel(mode, j, rng), useSequence = j % 2 === 1 && !(mode === 'V' && j % 7 === 2);
+    let main;
+    if (useSequence) {
+      const cards = [model.make()]; for (let k = 1; k < model.steps; k++) cards.push(model.apply(cards[k - 1]));
+      const answer = model.apply(cards[cards.length - 1]);
+      main = { kind: 'choice', prompt: '比较相邻项的联系。沿用能解释全部已知项的同一种变化，下一项是什么？', display: { kind: 'sequence', cards }, ...choices(answer, model.distractors(answer), rng) };
+    } else {
+      const pairs = [], used = new Set();
+      for (let tries = 0; pairs.length < 2 && tries < 100; tries++) { const x = model.make(); if (used.has(cardKey(x))) continue; used.add(cardKey(x)); pairs.push([x, model.apply(x)]); }
+      let probe = model.make(); for (let k = 0; used.has(cardKey(probe)) && k < 50; k++) probe = model.make();
+      const answer = model.apply(probe);
+      main = { kind: 'choice', prompt: '前两组遵循同一种变化。把这条联系用于第三组，应该得到哪张？', display: { kind: 'analogy', pairs, probe }, ...choices(answer, model.distractors(answer), rng) };
+    }
+    const check = inverseCheck(model, rng);
+    return { main, check, explanation: '可统一解释已知材料的变化是：' + model.describe + '。把同一变化用于新对象，即得到相应结果。', checkExplanation: '反向操作应能还原变化之前的对象。只对上某一个例子还不够，需要让所有例子通过同一种关系的检验。', model: { family: model.family, process: 'same-relation', describe: model.describe }, verify: () => equal(model.inverse(model.apply(check.before)), check.before) && equal(check.options[check.answer], check.before) };
+  }
+  function fitsSequence(cards, model) { return cards.slice(1).every((x, i) => equal(x, model.apply(cards[i]))); }
+  function buildF(mode, j, rng) {
+    const model = relationalModel(mode, j, rng), corrected = [model.make()];
+    for (let k = 1; k < model.steps; k++) corrected.push(model.apply(corrected[k - 1]));
+    const position = 1 + rng.int(corrected.length - 2), expectedCard = corrected[position];
+    const alternatives = model.distractors(expectedCard).filter(x => !equal(x, expectedCard));
+    assert(alternatives.length, 'Need an erroneous item');
+    const disturbed = clone(corrected); disturbed[position] = alternatives[rng.int(alternatives.length)];
+    const repair = choices(expectedCard, [disturbed[position], ...alternatives], rng);
+    const validLocations = disturbed.map((_, i) => {
+      if (i === 0) return false;
+      const candidate = clone(disturbed); candidate[i] = model.apply(candidate[i - 1]);
+      return fitsSequence(candidate, model);
+    }).map((v, i) => v ? i : -1).filter(x => x >= 0);
+    assert(validLocations.length === 1 && validLocations[0] === position, 'Disturbed sequence must have one repair location');
+    const main = { kind: 'repair', prompt: '序列中只有一项破坏了其余项的变化。先指出位置，再选择替换卡片，把整条序列修好。', display: { kind: 'sequence', cards: disturbed }, options: repair.options, answer: { position, repair: repair.answer } };
+    const check = inverseCheck(model, rng);
+    return { main, check, explanation: '整条序列应当' + model.describe + '。第' + (position + 1) + '项破坏了这一联系；用所示正确卡片替换后，每一段相邻关系都恢复一致。', checkExplanation: '修复不仅要让错误项看起来合适，还要同时接上前、后两段关系。再用另一组材料做逆向还原，检验你使用的是否为同一条规律。', model: { family: model.family, process: 'locate-and-repair', corrected, disturbed, position }, verify: () => fitsSequence(corrected, model) && !fitsSequence(disturbed, model) && validLocations.length === 1 && equal(model.inverse(model.apply(check.before)), check.before) };
+  }
+  function systemModel(mode, j, rng) {
+    if (mode === 'N') {
+      const down = 3 + rng.int(7), right = 1 + rng.int(5), family = j >= 4 ? 'scaled' : 'additive', factor = 2;
+      return {
+        family: 'numeric-system-' + family, rows: 3, cols: 3,
+        make: () => 2 + rng.int(12),
+        cell: (base, r, c) => num(family === 'scaled' ? (base + r * down) * factor ** c : base + r * down + c * right),
+        distractors: x => [num(x.value + 1), num(x.value - 1), num(x.value + down), num(x.value + right + 2)],
+        describe: family === 'scaled' ? '横向每步乘2；首列纵向每步加' + down + '，后续列的纵向增量也随横向倍数改变' : '横向每步加' + right + '，纵向每步加' + down,
+        checkGrid: cells => cells.every((line, r) => line.every((card, c) => (c === 0 || card.value === (family === 'scaled' ? line[c - 1].value * factor : line[c - 1].value + right)) && (r === 0 || card.value - cells[r - 1][c].value === (family === 'scaled' ? down * factor ** c : down))))
+      };
+    }
+    if (mode === 'V') {
+      const pre = PREFIXES[(j + 2) % PREFIXES.length], suf = SUFFIXES[(j + 1) % SUFFIXES.length];
+      return { family: 'word-two-transformations', rows: j >= 4 ? 3 : 2, cols: j % 2 ? 3 : 2, make: () => WORDS[rng.int(WORDS.length)],
+        cell: (base, r, c) => word(pre.repeat(c) + base + suf.repeat(r)),
+        distractors: x => [word(pre + x.text), word(x.text + suf), word(x.text.slice(1)), word(x.text.slice(0, -1)), word(pre + x.text + suf)],
+        describe: '向右每步在最前面加「' + pre + '」，向下每步在最后加「' + suf + '」',
+        checkGrid: cells => cells.every((line, r) => line.every((card, c) => (c === 0 || card.text === pre + line[c - 1].text) && (r === 0 || card.text === cells[r - 1][c].text + suf))) };
+    }
+    const family = j % 3, rows = j >= 4 ? 3 : 2, cols = j % 2 ? 3 : 2;
+    return { family: 'figure-two-transformations-' + family, rows, cols,
+      make: () => ({ kind: 'figure', shape: family === 0 ? 4 : rng.int(4), color: rng.int(4), count: 1 + rng.int(2), filled: true, rotation: rng.int(4), size: 1 }),
+      cell: (base, r, c) => { const out = clone(base); if (family === 0) { out.count += r; out.rotation = mod(out.rotation + c, 4); } if (family === 1) { out.count += c; out.size += r; } if (family === 2) { out.count += c; out.filled = r % 2 ? !out.filled : out.filled; } return out; },
+      distractors: x => [{ ...x, count: x.count + 1 }, { ...x, count: Math.max(1, x.count - 1) }, family === 0 ? { ...x, rotation: mod(x.rotation + 1, 4) } : family === 1 ? { ...x, size: x.size === 1 ? 2 : 1 } : { ...x, filled: !x.filled }, { ...x, count: x.count + 2 }],
+      describe: ['向右每步顺时针旋转90°，向下每步增加一个箭头', '向右每步增加一个图形，向下每步把每个图形增大一级', '向右每步增加一个图形，向下每步交换实心与空心'][family],
+      checkGrid: cells => cells.every((line, r) => line.every((card, c) => { if (c) { const prev = line[c - 1]; if (family === 0 && (card.rotation !== mod(prev.rotation + 1, 4) || card.count !== prev.count)) return false; if (family !== 0 && card.count !== prev.count + 1) return false; } if (r) { const prev = cells[r - 1][c]; if (family === 0 && (card.count !== prev.count + 1 || card.rotation !== prev.rotation)) return false; if (family === 1 && (card.size !== prev.size + 1 || card.count !== prev.count)) return false; if (family === 2 && (card.filled === prev.filled || card.count !== prev.count)) return false; } return true; })) };
+  }
+  function buildS(mode, j, rng) {
+    const model = systemModel(mode, j, rng), base = model.make();
+    const complete = Array.from({ length: model.rows }, (_, r) => Array.from({ length: model.cols }, (_, c) => model.cell(base, r, c)));
+    const mr = model.rows - 1, mc = model.cols - 1, correct = complete[mr][mc], mainCells = clone(complete); mainCells[mr][mc] = null;
+    const main = { kind: 'choice', prompt: '横着看，再竖着看。哪张卡片能让两个方向的联系都成立？', display: { kind: 'grid', cells: mainCells }, ...choices(correct, model.distractors(correct), rng) };
+    let nextBase = model.make(); for (let k = 0; equal(nextBase, base) && k < 80; k++) nextBase = model.make();
+    const second = Array.from({ length: model.rows }, (_, r) => Array.from({ length: model.cols }, (_, c) => model.cell(nextBase, r, c)));
+    const before = second[0][0], checkCells = clone(second); checkCells[0][0] = null;
+    const check = { kind: 'choice', prompt: '换一组材料逆向检查：空格这次在起点。哪张卡片能同时还原两个方向的关系？', display: { kind: 'grid', cells: checkCells }, ...choices(before, model.distractors(before), rng) };
+    return { main, check, explanation: '两个方向分别是：' + model.describe + '。缺项需要同时满足横向与纵向，不能只按一条线作答。', checkExplanation: '检查题更换了起始材料，并把缺项移到起点。把两个方向的变化分别倒过来，必须得到同一张起始卡片。', model: { family: model.family, process: 'joint-relations', complete, reverseComplete: second }, verify: () => model.checkGrid(complete) && model.checkGrid(second) && equal(main.options[main.answer], complete[mr][mc]) && equal(check.options[check.answer], second[0][0]) };
+  }
+  const builders = { G: buildG, D: buildD, C: buildC, R: buildR, F: buildF, S: buildS };
+  const offsets = [0, 0, 1, 1, 2, 2], questions = [], banks = {};
+  TYPES.forEach((type, ti) => {
+    const counters = { V: 0, F: 0, N: 0 }; banks[type.id] = [];
+    for (let i = 0; i < 20; i++) {
+      const mode = MODES[(i + offsets[ti]) % 3], j = counters[mode]++, seed = 271828 + ti * 100003 + j * 503 + mode.charCodeAt(0) * 37;
+      const q = builders[type.id](mode, j, random(seed));
+      Object.assign(q, { id: type.id + String(i + 1).padStart(2, '0'), type: type.id, mode, level: j < 2 ? 1 : j < 5 ? 2 : 3, seed, materialIndex: j, source: type.source });
+      questions.push(q); banks[type.id].push(q);
+    }
+  });
+  const used = Object.fromEntries(TYPES.map(t => [t.id, 0]));
+  LESSONS.forEach(lesson => { const left = lesson.counts.slice(); while (left.some(Boolean)) TYPES.forEach((t, i) => { if (left[i]) { const q = banks[t.id][used[t.id]++]; q.lesson = lesson.n; lesson.items.push(q.id); left[i]--; } }); });
+  const byId = Object.fromEntries(questions.map(q => [q.id, q]));
+  function sameResponse(q, value) {
+    if (q.main.kind === 'group') return Array.isArray(value) && equal(value.slice().sort((a, b) => a - b), q.main.answer.slice().sort((a, b) => a - b));
+    if (q.main.kind === 'repair') return value && value.position === q.main.answer.position && value.repair === q.main.answer.repair;
+    return Number.isInteger(value) && value === q.main.answer;
+  }
+  function validResponse(q, value) {
+    if (q.main.kind === 'group') return Array.isArray(value) && value.length === 3 && new Set(value).size === 3 && value.every(i => Number.isInteger(i) && i >= 0 && i < q.main.options.length);
+    if (q.main.kind === 'repair') return value && Number.isInteger(value.position) && value.position >= 0 && value.position < q.main.display.cards.length && Number.isInteger(value.repair) && value.repair >= 0 && value.repair < q.main.options.length;
+    return Number.isInteger(value) && value >= 0 && value < q.main.options.length;
+  }
+  function validCheck(q, value) { return Number.isInteger(value) && value >= 0 && value < q.check.options.length; }
+  function audit() {
+    const errors = [], fingerprints = new Map();
+    questions.forEach(q => {
+      if (!validResponse(q, q.main.answer) || !validCheck(q, q.check.answer)) errors.push(q.id + ':invalid-key');
+      if (!q.verify()) errors.push(q.id + ':model-failure');
+      for (const [name, options] of [['main', q.main.options], ['check', q.check.options]]) if (new Set(options.map(cardKey)).size !== options.length) errors.push(q.id + ':' + name + '-duplicate-options');
+      const key = JSON.stringify([q.type, q.mode, q.main]); if (fingerprints.has(key)) errors.push(q.id + ':duplicate-of-' + fingerprints.get(key)); fingerprints.set(key, q.id);
+      if (q.type === 'C' && (q.main.display.rows || q.main.display.cols || q.model.labelsGiven)) errors.push(q.id + ':classification-labels');
+      if (q.type === 'F' && q.main.kind !== 'repair') errors.push(q.id + ':missing-repair');
+    });
+    return { version: VERSION, total: questions.length, types: Object.fromEntries(TYPES.map(t => [t.id, questions.filter(q => q.type === t.id).length])), materials: Object.fromEntries(MODES.map(m => [m, questions.filter(q => q.mode === m).length])), lessons: LESSONS.map(l => l.items.length), unlabelledClassification: questions.filter(q => q.type === 'C' && !q.model.labelsGiven).length, repairs: questions.filter(q => q.main.kind === 'repair').length, independentChecks: questions.length, errors };
+  }
+  return { VERSION, TYPES, TYPE, MODES, MODE_NAMES, LESSONS, questions, byId, sameResponse, validResponse, validCheck, audit, equal, clone, cardKey, random, attribute, dimension, helpers: { commonDims, matches, combinations, fitsSequence, relationalModel, systemModel } };
+});
+
 </script>
-</body>
-</html>
+<script>
+/* Interactive learning sequence: independent attempt -> opposite comparison -> explanation. */
+(function () {
+  'use strict';
+  const E = window.KlauerEngine, KEY = 'klauer-method-v2', OLD_KEY = 'klauer-comparison-lab-v1';
+  const $ = s => document.querySelector(s);
+  const esc = x => String(x ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const initial = () => ({ schema: 2, version: E.VERSION, lesson: 1, index: 0, answers: {}, reviews: {}, started: Date.now() });
+  let state = initial(), view = 'home', storageOK = true, toastTimer, bucket = 'a', reviewFilter = 'todo';
+  function cleanResponse(q, v) {
+    if (q.main.kind === 'group') return Array.isArray(v) ? Array.from(new Set(v.filter(i => Number.isInteger(i) && i >= 0 && i < q.main.options.length))).slice(0, 3) : [];
+    if (q.main.kind === 'repair') return { position: Number.isInteger(v?.position) && v.position >= 0 && v.position < q.main.display.cards.length ? v.position : null, repair: Number.isInteger(v?.repair) && v.repair >= 0 && v.repair < q.main.options.length ? v.repair : null };
+    return Number.isInteger(v) && v >= 0 && v < q.main.options.length ? v : null;
+  }
+  function validate(input) {
+    if (!input || input.schema !== 2 || !input.answers || typeof input.answers !== 'object' || Array.isArray(input.answers)) throw Error('需要本次方法重做版的进度文件，旧题记录不混入新题。');
+    const out = initial(); out.lesson = Number.isInteger(input.lesson) && input.lesson >= 1 && input.lesson <= 10 ? input.lesson : 1; out.index = Number.isInteger(input.index) && input.index >= 0 && input.index < 12 ? input.index : 0; out.started = Number(input.started) || Date.now();
+    for (const [id, a] of Object.entries(input.answers)) {
+      const q = E.byId[id]; if (!q || !a || typeof a !== 'object') continue;
+      const first = E.validResponse(q, a.first) ? E.clone(a.first) : null;
+      const hasFinal = a.final !== undefined && E.validResponse(q, a.final);
+      const check = E.validCheck(q, a.check) ? a.check : null;
+      const completed = a.stage === 'done' && first !== null && hasFinal && E.sameResponse(q, a.final) && check === q.check.answer;
+      const stage = completed ? 'done' : ['check', 'feedback'].includes(a.stage) && first !== null ? a.stage : 'answer';
+      out.answers[id] = {
+        stage, draft: cleanResponse(q, a.draft), first, final: hasFinal ? E.clone(a.final) : null,
+        hints: Math.min(3, Math.max(0, Number(a.hints) || 0)), firstHint: Math.min(3, Math.max(0, Number(a.firstHint) || 0)),
+        check, firstCheck: E.validCheck(q, a.firstCheck) ? a.firstCheck : null,
+        checkAttempts: Math.min(999, Math.max(0, Number(a.checkAttempts) || 0)), tries: Math.min(999, Math.max(0, Number(a.tries) || 0)),
+        note: typeof a.note === 'string' ? a.note.slice(0, 3000) : '', inspect: typeof a.inspect === 'string' ? a.inspect.slice(0, 3000) : '',
+        reflection: typeof a.reflection === 'string' ? a.reflection.slice(0, 3000) : '', classification: typeof a.classification === 'string' ? a.classification : '',
+        compareOpen: a.compareOpen === true, firstSupport: a.firstSupport === true, checkedAt: Number(a.checkedAt) || 0
+      };
+    }
+    if (input.reviews && typeof input.reviews === 'object') for (const [lesson, entries] of Object.entries(input.reviews)) {
+      if (+lesson < 2 || +lesson > 10 || !entries || typeof entries !== 'object') continue;
+      out.reviews[lesson] = Object.fromEntries(Object.entries(entries).filter(([id, val]) => E.byId[id] && val === true));
+    }
+    return out;
+  }
+  try { const data = localStorage.getItem(KEY); if (data) state = validate(JSON.parse(data)); localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { storageOK = false; }
+  const qCurrent = () => E.byId[E.LESSONS[state.lesson - 1].items[state.index]];
+  function record(q) {
+    if (!state.answers[q.id]) state.answers[q.id] = { stage: 'answer', draft: q.main.kind === 'group' ? [] : q.main.kind === 'repair' ? { position: null, repair: null } : null, first: null, final: null, hints: 0, firstHint: 0, check: null, firstCheck: null, checkAttempts: 0, tries: 0, note: '', inspect: '', reflection: '', classification: '', compareOpen: false, firstSupport: false };
+    return state.answers[q.id];
+  }
+  const completed = id => state.answers[id]?.stage === 'done';
+  const doneCount = () => E.questions.filter(q => completed(q.id)).length;
+  const lessonDone = l => l.items.filter(completed).length;
+  function reviewIds(l) { if (l === 1) return []; const ids = E.LESSONS.slice(0, l).flatMap(x => x.items).filter(completed); if (l === 2) return E.LESSONS[0].items.filter(completed); if (l === 3 || l === 8) return ids.filter(id => E.TYPE[E.byId[id].type].branch === '属性'); if (l === 9) return ids.filter(id => E.TYPE[E.byId[id].type].branch === '关系'); return ids; }
+  const requiresReview = l => l >= 2 && l <= 7;
+  function reviewComplete(l) { if (!requiresReview(l)) return true; const ids = reviewIds(l); return ids.length > 0 && ids.every(id => state.reviews[l]?.[id]); }
+  const courseComplete = l => lessonDone(l) === 12 && reviewComplete(l.n);
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); storageOK = true; } catch (e) { storageOK = false; } const el = $('#storageStatus'); if (el) el.textContent = storageOK ? '本浏览器保存进度' : '当前无法保存，请导出备份'; }
+  function notify(text) { clearTimeout(toastTimer); $('#toast').textContent = text; $('#toast').classList.remove('hidden'); toastTimer = setTimeout(() => $('#toast').classList.add('hidden'), 4200); }
+  function changeView(next) { view = next; render(); window.scrollTo({ top: 0, behavior: 'instant' }); }
+  function start(n, index) { state.lesson = n; state.index = index ?? Math.max(0, E.LESSONS[n - 1].items.findIndex(id => !completed(id))); save(); changeView('train'); }
+  const COLOR = ['#c36945', '#3f709a', '#538152', '#8c67a1'];
+  function figure(card) {
+    const n = card.count, cols = n <= 3 ? n : n <= 8 ? 4 : n <= 16 ? 4 : 8, rows = Math.ceil(n / cols), width = Math.max(120, cols * 30), height = Math.max(90, rows * 31);
+    const stepX = width / (cols + 1), stepY = height / (rows + 1), baseR = Math.min(stepX * 0.34, stepY * 0.32), radius = baseR * (0.65 + (card.size || 1) * 0.23);
+    let shapes = '';
+    for (let k = 0; k < n; k++) {
+      const x = stepX * (k % cols + 1), y = stepY * (Math.floor(k / cols) + 1), r = radius;
+      const path = card.shape === 0 ? `<circle r="${r}"></circle>` : card.shape === 1 ? `<rect x="${-r}" y="${-r}" width="${2 * r}" height="${2 * r}" rx="1"></rect>` : card.shape === 2 ? `<path d="M0 ${-r} L${r} ${r} L${-r} ${r}Z"></path>` : card.shape === 3 ? `<path d="M0 ${-r} L${r} 0 L0 ${r} L${-r} 0Z"></path>` : `<path d="M${-r} ${-r / 3} H0 V${-r} L${r} 0 L0 ${r} V${r / 3} H${-r}Z"></path>`;
+      shapes += `<g transform="translate(${x} ${y}) rotate(${(card.rotation || 0) * 90})" fill="${card.filled ? COLOR[card.color] : 'none'}" stroke="${COLOR[card.color]}" stroke-width="1.6" stroke-linejoin="round">${path}</g>`;
+    }
+    const shapesNames = ['圆形', '方形', '三角形', '菱形', '箭头'];
+    const label = [E.MODE_NAMES.F, ['橙色', '蓝色', '绿色', '紫色'][card.color], card.filled ? '实心' : '空心', shapesNames[card.shape], n + '个', card.shape === 4 ? ['向右', '向下', '向左', '向上'][card.rotation] : '', '尺寸' + card.size].filter(Boolean).join('，');
+    return `<svg class="drawing" viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(label)}">${shapes}</svg>`;
+  }
+  function cardHTML(card) {
+    if (card === null) return '<span class="token blank">?</span>';
+    if (card.kind === 'figure') return `<span class="token graphic">${figure(card)}</span>`;
+    if (card.kind === 'record') return `<span class="record-card">${card.fields.map(([k, v]) => `<span><small>${esc(k)}</small><b>${esc(v)}</b></span>`).join('')}</span>`;
+    if (card.kind === 'word') return `<span class="token word">${esc(card.text)}</span>`;
+    if (card.kind === 'number') return `<span class="token number">${esc(card.value)}</span>`;
+    if (card.kind === 'position') return `<span class="token">第 ${card.value} 格</span>`;
+    if (card.kind === 'placement') return `<span class="placement">${cardHTML(card.card)}<span>放入第 <b>${card.position}</b> 格</span></span>`;
+    return `<span class="token">${esc(card)}</span>`;
+  }
+  function displayHTML(display, isCheck) {
+    if (!display) return '';
+    if (display.kind === 'cards') return `<div class="stimuli">${display.cards.map(cardHTML).join('')}</div>`;
+    if (display.kind === 'sequence') return `<div class="stimuli sequence">${display.cards.map((x, i) => `<div class="seqitem">${cardHTML(x)}<small>第 ${i + 1} 项</small></div>`).join('<span class="seqarr" aria-hidden="true">→</span>')}</div>`;
+    if (display.kind === 'analogy') return `<div class="analogies">${display.pairs.map(pair => `<div class="pair">${cardHTML(pair[0])}<span class="seqarr">→</span>${cardHTML(pair[1])}</div>`).join('')}<div class="pair probe">${cardHTML(display.probe)}<span class="seqarr">→</span><span class="token blank">?</span></div></div>`;
+    if (display.kind === 'result') return `<div class="stimuli"><span class="token blank">?</span><span class="seqarr">→</span>${cardHTML(display.card)}</div>`;
+    if (display.kind === 'grid' || display.kind === 'classification') return `<div class="stimuli"><div class="matrixwrap"><table class="matrix ${display.kind === 'classification' ? 'unlabelled' : ''}" aria-label="${display.kind === 'classification' ? '无分类标签的参照表格' : '关系矩阵'}"><tbody>${display.cells.map((row, r) => `<tr>${row.map((c, col) => `<td>${cardHTML(c)}${display.kind === 'classification' || (isCheck && qCurrent().type === 'C') ? `<small class="cell-number">第 ${r * row.length + col + 1} 格</small>` : ''}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>${display.probe ? `<div class="probe-card"><small>需要归位的新卡片</small>${cardHTML(display.probe)}</div>` : ''}`;
+    return '';
+  }
+  function optionsHTML(q, a, check) {
+    const task = check ? q.check : q.main, draft = check ? a.check : a.draft;
+    let position = '';
+    if (!check && task.kind === 'repair') position = `<p class="choice-label">① 哪一项需要修复？</p><div class="position-options">${task.display.cards.map((_, i) => `<button data-position="${i}" aria-pressed="${draft?.position === i}" class="${draft?.position === i ? 'selected' : ''}">第 ${i + 1} 项</button>`).join('')}</div><p class="choice-label">② 用哪张卡片替换？</p>`;
+    const label = check ? '反向检查选项' : task.kind === 'group' ? '选择三张组成一组' : task.kind === 'place' ? '选择归位位置' : '解答选项';
+    return `${position}<div class="row between choice-label"><small>${task.kind === 'group' ? '选择三张 · 不必说出题型名称' : label}</small><small>${!check ? '先解答，后检查' : '标准解法尚未展示'}</small></div><div class="options ${task.kind === 'group' ? 'group-options' : ''}" role="group" aria-label="${esc(label)}">${task.options.map((card, i) => { const selected = check ? draft === i : task.kind === 'group' ? Array.isArray(draft) && draft.includes(i) : task.kind === 'repair' ? draft?.repair === i : draft === i; return `<button class="option ${selected ? 'selected' : ''}" data-${check ? 'check' : 'option'}="${i}" aria-pressed="${selected}"><span class="letter">${String.fromCharCode(65 + i)}</span>${cardHTML(card)}</button>`; }).join('')}</div>`;
+  }
+  function notesHTML(q, a) {
+    if (state.lesson === 1) return `<p class="overviewnote">可以先直接尝试，不必先分析题型。想好了再提交。</p>`;
+    return `<details class="notes" ${state.lesson >= 8 ? 'open' : ''}><summary>${state.lesson >= 8 ? '每题三问 · 先自己想，也可与陪练口头讨论' : '记录一下想法（可选）'}</summary><div class="note-body"><label for="hypothesis">${state.lesson >= 8 ? '① 我看了哪些特点或联系？② 我准备怎样比较？' : '我发现的规律或假设'}</label><textarea id="hypothesis" maxlength="3000" placeholder="先写自己的想法；不会按字数或术语评分。">${esc(a.note)}</textarea><label for="inspect">${state.lesson >= 8 ? '③ 我怎样用另一方向检查？' : '我准备怎样检查这个假设'}</label><textarea id="inspect" maxlength="3000" placeholder="可尝试找反例、看剩下对象的共同点，或倒过来还原变化。">${esc(a.inspect)}</textarea><small>也可口述。文字不自动判分；完成后对照解释，或请陪练判断理由是否成立。</small></div></details>`;
+  }
+  function hintHTML(q, a) {
+    if (!a.hints && !a.compareOpen) return '';
+    const generic = q.type === 'C' ? '分别比较同一行与同一列，观察哪些特点保持、哪些改变。先不要只看新卡片。' : q.type === 'S' ? '把横向与纵向分别当成一条线，提出两个关系，再让同一个候选同时通过它们。' : q.type === 'R' || q.type === 'F' ? '比较相邻两项或成对对象之间发生的变化。让你的假设解释每一段联系。' : '逐项比较可见特点：哪些相同，哪些不同？不要只凭最显眼的一张。';
+    return `<section class="hint-panel">${a.hints >= 1 ? '<div class="hint"><b>提示1</b>　先整体观察，提出一个可能的规则，再用所有材料检验它。</div>' : ''}${a.hints >= 2 ? `<div class="hint"><b>提示2</b>　${esc(generic)}</div>` : ''}${a.hints >= 3 ? `<div class="hint"><b>提示3</b>　${esc(q.explanation)}</div>` : ''}${a.compareOpen ? `<div class="strategy"><h3>逐项比较记录</h3><p class="overviewnote">${esc(generic)}把材料按位置编号，轮流检查一个特点或一段关系；检验失败就换假设。</p><label for="comparison">我的逐项比较</label><textarea id="comparison" maxlength="3000" placeholder="例如：第1与第2项之间……；这项规则能否解释其余材料？">${esc(a.reflection)}</textarea></div>` : ''}</section>`;
+  }
+  function routeButton(name, label, cls = '') { return `<button data-nav="${name}" class="${cls}">${label}</button>`; }
+  function home() {
+    let old = false; try { old = !!localStorage.getItem(OLD_KEY); } catch (e) {}
+    const firstCount = E.questions.filter(q => { const a = state.answers[q.id]; return a?.first !== null && a?.first !== undefined && E.sameResponse(q, a.first) && a.firstHint === 0 && !a.firstSupport; }).length;
+    return `<section class="hero"><div><div class="eyebrow">METHOD REBUILT · V2</div><div class="spacer"></div><h1>先自己发现，<br><em>再让规律经得起检查。</em></h1><p>从同与不同中找出结构，提出自己的假设，换个方向验证。题目按六类认知操作重做，每一题都能查看方法依据。</p><div class="row"><button class="primary" id="continue">${doneCount() ? '继续第 ' + state.lesson + ' 课' : '开始第 1 课'}　→</button>${routeButton('about', '题目为什么这样设计')}</div></div><div class="diagram"><div class="method-flow"><span>观察材料</span><b>↓</b><span>提出自己的解答</span><b>↓</b><span>反向查验</span><b>↓</b><span>看解释 · 修订假设</span></div></div></section><div class="stats"><div class="stat"><b>${doneCount()}<small> / 120</small></b>完成解答与检查</div><div class="stat"><b>${E.LESSONS.filter(courseComplete).length}<small> / 10</small></b>完成课程</div><div class="stat"><b>${firstCount}</b>无提示首次答对</div></div>${old ? '<div class="notice">检测到旧版训练记录。旧题数据继续保留；本次题库、检查和记录独立计算，避免把不同任务的结果混在一起。</div>' : ''}<div class="sectiontitle"><h2>十堂课，逐步选择比较方法</h2><span class="badge">每课12道主题 · 每题含查验环节</span></div><div class="coursegrid">${E.LESSONS.map(l => `<button class="course ${l.n === state.lesson ? 'current' : ''}" data-lesson="${l.n}"><div class="row between" style="width:100%"><span class="num">${String(l.n).padStart(2, '0')}</span>${courseComplete(l) ? '<span class="badge">完成 ✓</span>' : ''}</div><h3>${esc(l.title)}</h3><small>${lessonDone(l)}/12${lessonDone(l) === 12 && !reviewComplete(l.n) ? ' · 待归类复盘' : ''}</small><div class="progress"><i style="width:${lessonDone(l) / 12 * 100}%"></i></div></button>`).join('')}</div><p class="overviewnote">建议按顺序分次练习。可参考每周两次、五周完成的研究安排；课次目标来自论文表2，单次时长可随学习者调整。</p><div class="notice">本版依据公开方法及样题机制构造新实例。六类各20题，文字、图形、数量各40题；不是作者商业题册原题的逐题复制。检查小题是每题内部的验证步骤，不另计为主题。</div>`;
+  }
+  function answerSummary(q, value) {
+    if (q.main.kind === 'group') return '卡片 ' + (value || []).map(i => String.fromCharCode(65 + i)).join('、');
+    if (q.main.kind === 'repair') return '第 ' + ((value?.position ?? -1) + 1) + ' 项 → 替换为 ' + String.fromCharCode(65 + (value?.repair ?? 0));
+    return '选项 ' + String.fromCharCode(65 + value);
+  }
+  function train() {
+    const q = qCurrent(), a = record(q), l = E.LESSONS[state.lesson - 1], step = a.stage === 'answer' ? 1 : a.stage === 'check' ? 2 : 3;
+    let content = '';
+    if (a.stage === 'answer') content = `<h2 class="qtitle" id="qtitle" tabindex="-1">${esc(q.main.prompt)}</h2>${displayHTML(q.main.display, false)}${q.mode === 'V' ? '<p class="material-note">文字卡的特点以画面为准；字片只比较可见字符，不必猜词语含义。</p>' : q.mode === 'N' ? '<p class="material-note">可比较数的写法或数之间的联系；不需要猜未展示的文化常识。</p>' : ''}${optionsHTML(q, a, false)}${notesHTML(q, a)}${hintHTML(q, a)}<div class="qfoot"><div class="row"><button class="small" id="hint">按需提示 ${a.hints}/3</button><button class="small flat" id="compare">${a.compareOpen ? '收起逐项比较' : '尝试逐项比较'}</button></div><button class="primary" id="submit">保存我的解答，进入查验　→</button></div><small>先整体提出假设；有困难时再用提示或逐项比较。不会在提交后立即揭示标准答案。</small>`;
+    if (a.stage === 'check') content = `<div class="saved-answer"><span class="badge">首答已记录</span><span>${esc(answerSummary(q, a.first))}</span><small>暂不揭示对错，先用相反方向检查。</small></div><h2 class="qtitle" id="qtitle" tabindex="-1">${esc(q.check.prompt)}</h2>${displayHTML(q.check.display, true)}${optionsHTML(q, a, true)}${notesHTML(q, a)}<div class="qfoot"><small>这一环节不提供标准规则。</small><button class="primary" id="submitCheck">提交查验，再看讲解　→</button></div>`;
+    if (a.stage === 'feedback' || a.stage === 'done') {
+      const firstRight = E.sameResponse(q, a.first), checkRight = a.check === q.check.answer, finished = a.stage === 'done';
+      content = `<h2 class="qtitle" id="qtitle" tabindex="-1">${finished ? '解答与查验都已通过' : '对照证据，修订自己的想法'}</h2><div class="result-pills"><span class="badge ${firstRight ? '' : 'orange'}">首次解答：${firstRight ? '一致' : '需修订'}</span><span class="badge ${checkRight ? '' : 'orange'}">最近查验：${checkRight ? '一致' : '需修订'}</span>${a.firstHint || a.firstSupport ? '<span class="badge orange">使用过支持</span>' : ''}</div><section class="feedback"><h3>${esc(E.TYPE[q.type].name)} · ${esc(E.TYPE[q.type].operation)}</h3><p>${esc(q.explanation)}</p><p class="check"><b>为什么这样检查：</b>${esc(q.checkExplanation)}</p></section><details class="solution" open><summary>材料与正确结果</summary>${displayHTML(q.main.display, false)}<div class="solution-answer"><small>解答</small>${q.main.kind === 'group' ? q.main.answer.map(i => cardHTML(q.main.options[i])).join('') : q.main.kind === 'repair' ? `<b>第 ${q.main.answer.position + 1} 项替换为</b>${cardHTML(q.main.options[q.main.answer.repair])}` : cardHTML(q.main.options[q.main.answer])}</div><div class="solution-answer"><small>查验结果</small>${cardHTML(q.check.options[q.check.answer])}</div></details>${a.note || a.inspect ? `<div class="strategy"><h3>你先前的想法</h3><p>${esc(a.note || '未写文字，可与陪练讨论。')}</p><p>${esc(a.inspect)}</p><small>网页没有自动判断这段理由是否充分。请与材料、标准解释及陪练意见对照。</small></div>` : ''}<div class="qfoot"><div class="row">${!finished ? '<button id="retry">用同一材料重新解答</button>' : ''}<button id="method" class="small">这道题的方法依据</button></div>${finished ? '<button class="primary" id="next">' + (state.index === 11 ? '本课复盘　→' : '下一题　→') + '</button>' : '<small>修订后重新完成解答与查验；首次记录保留。</small>'}</div>`;
+    }
+    return `<div class="row between" style="margin-bottom:18px"><div><span class="eyebrow">LESSON ${String(l.n).padStart(2, '0')} · ${E.MODE_NAMES[q.mode]}</span><h2>${esc(l.title)}</h2></div><select id="lessonSelect" aria-label="切换课程" style="width:auto;max-width:170px">${E.LESSONS.map(x => `<option value="${x.n}" ${x.n === l.n ? 'selected' : ''}>第 ${x.n} 课</option>`).join('')}</select></div><div class="training"><section class="card" id="questionCard"><div class="stagebar" aria-label="当前步骤"><span class="${step === 1 ? 'active' : ''}">1 自己解答</span><span class="${step === 2 ? 'active' : ''}">2 反向查验</span><span class="${step === 3 ? 'active' : ''}">3 对照与修订</span></div><small class="question-number">本课 ${state.index + 1}/12 · 题号 ${esc(q.id)} · ${q.level === 1 ? '基础比较' : q.level === 2 ? '变换材料' : '联合比较'}</small>${content}</section><aside class="aside"><div class="card"><h3>本课练习目标</h3><p>${esc(l.goal)}</p><div class="progress"><i style="width:${lessonDone(l) / 12 * 100}%"></i></div><div class="dots">${l.items.map((id, i) => `<button data-jump="${i}" class="${completed(id) ? 'done' : ''} ${state.index === i ? 'here' : ''}" aria-label="第 ${i + 1} 题${completed(id) ? '，完成' : ''}">${i + 1}</button>`).join('')}</div><button class="widebutton small" data-nav="review">归类复盘</button></div><div class="card"><h3>${l.n >= 8 ? '每题问自己三句话' : '让比较服务于发现'}</h3><ol class="steps"><li>我需要看哪些特点或联系？</li><li>我的假设能解释全部材料吗？</li><li>反过来检查，还成立吗？</li></ol><p>不要求先报出题型名称。提示与逐项比较按需使用。第一次解答及检查会单独保留。</p><small>可以邀请家长、教师或同伴追问理由。网页能检查结构化作答，不能代替对解释的判断。</small></div></aside></div>`;
+  }
+  function review() {
+    const l = state.lesson, ids = reviewIds(l), two = l === 2, sorted = state.reviews[l] || {}, choices = two ? [{ id: 'a', name: '对象自身的特点' }, { id: 'r', name: '对象之间的联系' }] : E.TYPES.filter(t => l === 3 || l === 8 ? t.branch === '属性' : l === 9 ? t.branch === '关系' : true).map(t => ({ id: t.id, name: t.branch + ' · ' + t.operation }));
+    if (!choices.some(x => x.id === bucket)) bucket = choices[0]?.id || 'a';
+    const displayed = reviewFilter === 'todo' ? ids.filter(id => !sorted[id]) : ids;
+    return `<div class="row between"><div><span class="eyebrow">REVISIT & COMPARE</span><h2>第 ${l} 课 · 回看你怎样比较</h2></div><select id="reviewLesson" aria-label="选择复盘课次" style="width:auto">${E.LESSONS.map(x => `<option value="${x.n}" ${x.n === l ? 'selected' : ''}>第 ${x.n} 课</option>`).join('')}</select></div><div class="notice">${l === 1 ? '第1课先熟悉题目，不要求学习术语。完成12题后可直接进入第2课。' : '先选择一种比较方式，再点击属于它的已完成题目。可以用日常语言理解分类，不必背诵专业名词。'} 这里回看旧题，不增加120道主题的数量。</div><section class="card" style="margin-top:18px"><div class="row between"><h3>已归类 ${ids.filter(id => sorted[id]).length}/${ids.length}</h3><select id="reviewFilter" aria-label="筛选复盘题" style="width:auto"><option value="todo" ${reviewFilter === 'todo' ? 'selected' : ''}>未归类</option><option value="all" ${reviewFilter === 'all' ? 'selected' : ''}>全部</option></select></div><div class="reviewbuckets">${choices.map(x => `<button data-bucket="${x.id}" class="small ${x.id === bucket ? 'active' : ''}">${esc(x.name)}</button>`).join('')}</div><div class="reviewgrid">${displayed.map(id => { const q = E.byId[id]; return `<button class="reviewcard ${sorted[id] ? 'sorted' : ''}" data-sort="${id}" ${sorted[id] ? 'disabled' : ''}><span class="badge">${id} · 第${q.lesson}课</span><p class="mini">${esc(q.main.prompt)}</p>${displayHTML(q.main.display, false) || `<div class="stimuli">${q.main.options.slice(0, 3).map(cardHTML).join('')}</div>`}<small>${sorted[id] ? '已归类 ✓' : '归入当前比较方式'}</small></button>`; }).join('')}</div>${!displayed.length ? `<div class="empty">${ids.length ? '当前没有未归类题目。' : '先完成本课练习，题卡会显示在这里。'}</div>` : ''}<div class="qfoot"><button data-nav="train">返回题目</button>${lessonDone(E.LESSONS[l - 1]) === 12 && reviewComplete(l) ? `<button class="primary" id="nextLesson">${l < 10 ? '进入第 ' + (l + 1) + ' 课　→' : '查看训练记录　→'}</button>` : `<small>${lessonDone(E.LESSONS[l - 1]) < 12 ? '先完成本课解答与查验' : '完成比较方式复盘后继续'}</small>`}</div></section>`;
+  }
+  function records() {
+    const attempted = E.questions.filter(q => state.answers[q.id]?.first !== null && state.answers[q.id]?.first !== undefined);
+    const firstRight = attempted.filter(q => E.sameResponse(q, state.answers[q.id].first)).length;
+    const checkRight = attempted.filter(q => state.answers[q.id]?.firstCheck === q.check.answer).length;
+    return `<div class="row between"><div><span class="eyebrow">PROCESS RECORD</span><h2>保留第一次，也记录怎样修订</h2></div><div class="row"><button id="export" class="small">导出本版进度</button><button id="import" class="small">导入本版进度</button><input id="importFile" type="file" accept="application/json,.json" hidden></div></div><div class="stats"><div class="stat"><b>${doneCount()}/120</b>解答与查验完成</div><div class="stat"><b>${firstRight}/${attempted.length}</b>首次解答一致（含支持）</div><div class="stat"><b>${checkRight}/${attempted.length}</b>首次反向查验一致</div></div><div class="split" style="margin-top:20px"><div class="card"><h3>六类练习覆盖</h3>${E.TYPES.map(t => { const d = E.questions.filter(q => q.type === t.id && completed(q.id)).length; return `<div class="recordbar"><span>${t.name}</span><div class="progress"><i style="width:${d * 5}%"></i></div><small>${d}/20</small></div>`; }).join('')}</div><div class="card"><h3>怎样理解记录</h3><p class="overviewnote">首次解答、提示、逐项比较和首次检查分别保存。重做不会改写第一次记录；记录的是本套任务的作答行为，不是智商或迁移效果。</p><p class="overviewnote">自由解释可写可口述，网页不按字数或专业术语判定理解。建议定期导出备份。</p><button class="small danger" id="reset" style="margin-top:15px">清除本版进度</button></div></div><div class="sectiontitle"><h3>题目与思考记录</h3><small>点击题号回到该题</small></div><div class="card tablewrap"><table class="table"><thead><tr><th>题目</th><th>过程</th><th>第一次／支持</th><th>我的假设与检查</th></tr></thead><tbody>${attempted.map(q => { const a = state.answers[q.id]; return `<tr><td><button class="small flat" data-openq="${q.id}">${q.id}</button><br><small>第${q.lesson}课</small></td><td>${E.TYPE[q.type].name}<br><small>${a.stage === 'done' ? '完成' : '进行中'}</small></td><td>首答${E.sameResponse(q, a.first) ? '一致' : '需修订'}<br><small>首答前提示${a.firstHint}级${a.firstSupport ? ' · 逐项比较' : ''}；查验${a.checkAttempts}次</small></td><td>${esc(a.note || '未写文字记录')}<br><small>${esc(a.inspect || '可与陪练口头讨论')}</small></td></tr>`; }).join('') || '<tr><td colspan="4" class="empty">完成第一次提交后显示记录。</td></tr>'}</tbody></table></div>`;
+  }
+  function about() {
+    return `<div class="eyebrow">DESIGN EVIDENCE · VERSION ${E.VERSION}</div><h2>从认知操作出发设计题目</h2><div class="stack source" style="margin-top:20px"><section class="card"><h3>本次实际改变了什么</h3><ul><li>去掉题干中“按奇偶性”“蓝色且空心”等提前透露规则的说法。对象特点直接可见，由学习者比较并发现共同点。</li><li>20道交叉分类全部使用无分类标题的参照表格。新卡片保留两个分类维度，同时改变一个无关特点，不能只凭外观完全相同来归位。</li><li>20道关系区分全部要求定位并选择替换对象；修复后每一段关系都必须一致。</li><li>120道主题各含一个不先显示答案的反向检查。先锁定解答，再检查，最后展示规则和证据；检查步骤不另算主题。</li><li>三问可写可口述，不按字数、不按是否报出类别名称决定通过。结构化解答与查验均正确才能完成该题。</li><li>支持按需展开：先整体提出假设，有困难再逐项比较；最高级提示会给出规则，并记录为有支持作答。</li></ul></section><section class="card tablewrap"><h3>六类任务对应的原文与实际操作</h3><table class="table"><thead><tr><th>过程</th><th>实际完成的工作</th><th>验收</th></tr></thead><tbody>${E.TYPES.map((t, i) => `<tr><td>${t.name}<br><small>${esc(t.source)}</small></td><td>${['从对象中组成类别或扩充从示例发现的类别', '找出破坏其他对象共同属性的异项', '发现两个交叉分类维度，再归位新对象', '发现并应用统一变换／续列／类比', '找异常位置并选择替换对象，实际修复序列', '让缺项同时满足矩阵横向和纵向的关系'][i]}</td><td>${['限定可见维度中，共同属性与正确组唯一', '去掉异项后其余对象形成一致类别', '无行列类别标签；两维交叉；无关属性变化', '所有已知关系一致；用新对象作逆向还原', '修复后前后相邻关系均成立', '两个方向均能验证；换材料从起点反向检查'][i]}</td></tr>`).join('')}</tbody></table></section><section class="card"><h3>主要原文依据</h3><p>Klauer & Phye（2008），<i>Inductive Reasoning: A Training Approach</i>：第87—88页定义与表1；第89—90页及图3的整体假设、定向验证与分析策略；第91页版本、题量以及“不必报出题型名称”；第92—93页表2、每题三问与相反比较。</p><div class="row"><a href="https://journals.sagepub.com/doi/10.3102/0034654307313402" target="_blank" rel="noopener noreferrer">2008论文正式出版页 ↗</a><a href="https://www.researchgate.net/publication/242148990_Inductive_Reasoning_A_Training_Approach" target="_blank" rel="noopener noreferrer">作者上传全文 ↗</a></div><p>Klauer、Willmes & Phye（2002）附录第21—23页公开六类样题。第22页关系区分要求找错并修正；第23页提供不预写分类名称的交叉分类样例及系统建构矩阵。它们来自1994儿童版，用于核对机制，不冒充已取得II／III完整题库。</p><a href="https://gwern.net/doc/dual-n-back/2002-klauer.pdf#page=21" target="_blank" rel="noopener noreferrer">六类原始样题，附录第21—23页 ↗</a></section><section class="card tablewrap"><h3>十课目标与本项目题型配额</h3><table class="table"><thead><tr><th>课次</th><th>表2对应目标</th><th>本项目编排</th></tr></thead><tbody>${E.LESSONS.map(l => `<tr><td>${l.n} · ${l.title}</td><td>${l.goal}</td><td>${l.counts.map((c, i) => c ? E.TYPES[i].name + '×' + c : '').filter(Boolean).join('，')}</td></tr>`).join('')}</tbody></table><p><small>原文表2规定的是教学目标。上列配额与逐题顺序为本项目编排，不是原版逐题分课表。</small></p></section><section class="card"><h3>题目构造与适用范围</h3><p>本版保留120道主题、六类各20、三种材料各40。文字资料使用画面直接给出的物品记录和字片变换，避免依靠鸟类分类或词义猜测；数量属性题使用可见的数字位值，关系题使用小整数及变换；图形题使用形状、颜色、数量、方向、大小和填充。</p><p>答案唯一性是在有限可见属性和本项目明确的变换模型中检验的。有限数列不可能排除所有人为数学规则；这里不宣称“在一切可能规则下唯一”。难度按材料和关系逐步加深，但未经过标准化校准。</p><p>原方案通常有训练者引导。2002年的一项实验是五周、每周两次、每次最多45分钟；这是特定研究条件。网页可用于个人或陪练，不自动复制原研究条件或效果。</p><p><b>原题边界：</b>这些是依据公开理论与样例机制构造的新题，不是作者商业题册原题的复制。题型细节、有限规则族、配额、提示时机、查验任务和交互方式均为本项目实现。本网站仍需独立教育效果评估。</p><p><b>数据：</b>本版记录独立保存，旧版进度不覆盖；没有账号、外部评分接口或运行时依赖。保存HTML可离线使用；预览或隐私环境请导出进度备份。</p><button class="primary" id="saveHtmlAbout">保存完整离线网页</button></section></div>`;
+  }
+  function render() {
+    $('#app').innerHTML = `<div class="shell"><aside class="side"><div class="brand"><span class="mark">∩</span><div>比较之间<small>METHOD EDITION · V2</small></div></div><nav class="nav" aria-label="主要导航">${[['home', '01', '课程总览'], ['train', '02', '进入训练'], ['review', '03', '分类复盘'], ['records', '04', '训练记录'], ['about', '05', '依据与设计']].map(([id, no, text]) => `<button data-nav="${id}" class="${view === id ? 'active' : ''}" ${view === id ? 'aria-current="page"' : ''}><span>${no}</span>${text}</button>`).join('')}</nav><div class="sidefoot"><b>发现规律，再检查。</b><p>不先给规则，不只选答案。</p><div class="spacer"></div>Klauer公开方法改编<br>原创实例 · 可核查设计</div></aside><main class="main"><header class="top"><div><div class="eyebrow">INDUCTIVE REASONING · V${E.VERSION}</div><small>120道主题 · 十课 · 六种比较操作</small></div><div class="topright"><small><span class="dot"></span><span id="storageStatus">${storageOK ? '本浏览器保存进度' : '当前无法保存，请导出备份'}</span></small><button class="small" id="saveHtml">保存离线网页</button></div></header><div id="page">${({ home, train, review, records, about })[view]()}</div><div class="footer">方法依据：Klauer & Phye, 2008 · 原创实例，非官方题册 · 自由解释不自动判分</div></main></div>`;
+    bind();
+  }
+  function download(name, data, type) { const url = URL.createObjectURL(new Blob([data], { type })); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500); }
+  function exportProgress() { download('比较之间-v2-进度-' + new Date().toISOString().slice(0, 10) + '.json', JSON.stringify(state, null, 2), 'application/json'); }
+  function saveHtml() { const copy = document.documentElement.cloneNode(true); copy.querySelector('#app').innerHTML = ''; copy.querySelector('#toast').textContent = ''; copy.querySelector('#toast').classList.add('hidden'); copy.querySelectorAll('dialog').forEach(x => x.removeAttribute('open')); download('比较之间-按克劳尔方法重做版.html', '<!DOCTYPE html>\n' + copy.outerHTML, 'text/html;charset=utf-8'); notify('已请求保存完整HTML；打开后无需网络依赖。'); }
+  function submitMain() {
+    const q = qCurrent(), a = record(q);
+    if (!E.validResponse(q, a.draft)) { notify(q.main.kind === 'group' ? '请恰好选出三张卡片。' : q.main.kind === 'repair' ? '请先选错误位置，再选替换卡片。' : '先选择你的解答。'); return; }
+    if (a.first === null) { a.first = E.clone(a.draft); a.firstHint = a.hints; a.firstSupport = a.compareOpen; }
+    a.final = E.clone(a.draft); a.tries++; a.stage = 'check'; a.check = null; save(); render(); focusQuestion();
+  }
+  function submitCheck() {
+    const q = qCurrent(), a = record(q);
+    if (!E.validCheck(q, a.check)) { notify('先选择你的反向查验结果。'); return; }
+    if (a.firstCheck === null) a.firstCheck = a.check;
+    a.checkAttempts++; a.checkedAt = Date.now();
+    a.stage = E.sameResponse(q, a.final) && a.check === q.check.answer ? 'done' : 'feedback';
+    save(); render(); focusQuestion();
+  }
+  function focusQuestion() { $('#qtitle')?.focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: 'instant' }); }
+  function bind() {
+    const on = (id, fn) => { if ($('#' + id)) $('#' + id).onclick = fn; };
+    document.querySelectorAll('[data-nav]').forEach(b => b.onclick = () => changeView(b.dataset.nav));
+    document.querySelectorAll('[data-lesson]').forEach(b => b.onclick = () => start(+b.dataset.lesson));
+    document.querySelectorAll('[data-jump]').forEach(b => b.onclick = () => start(state.lesson, +b.dataset.jump));
+    document.querySelectorAll('[data-openq]').forEach(b => b.onclick = () => { const q = E.byId[b.dataset.openq]; start(q.lesson, E.LESSONS[q.lesson - 1].items.indexOf(q.id)); });
+    document.querySelectorAll('[data-option]').forEach(b => b.onclick = () => {
+      const q = qCurrent(), a = record(q), i = +b.dataset.option;
+      if (q.main.kind === 'group') { const values = Array.isArray(a.draft) ? a.draft : []; if (values.includes(i)) a.draft = values.filter(x => x !== i); else if (values.length < 3) a.draft = values.concat(i); else { notify('已选三张；先取消一张再调整。'); return; } }
+      else if (q.main.kind === 'repair') a.draft = { ...a.draft, repair: i };
+      else a.draft = i;
+      save(); render();
+    });
+    document.querySelectorAll('[data-position]').forEach(b => b.onclick = () => { const a = record(qCurrent()); a.draft = { ...a.draft, position: +b.dataset.position }; save(); render(); });
+    document.querySelectorAll('[data-check]').forEach(b => b.onclick = () => { record(qCurrent()).check = +b.dataset.check; save(); render(); });
+    document.querySelectorAll('[data-bucket]').forEach(b => b.onclick = () => { bucket = b.dataset.bucket; render(); });
+    document.querySelectorAll('[data-sort]').forEach(b => b.onclick = () => { const q = E.byId[b.dataset.sort], wanted = state.lesson === 2 ? E.TYPE[q.type].branch === '属性' ? 'a' : 'r' : q.type; if (bucket !== wanted) { notify('回想你比较的是特点还是联系，以及相同、不同或两者。'); return; } state.reviews[state.lesson] ??= {}; state.reviews[state.lesson][q.id] = true; save(); render(); });
+    on('continue', () => start(state.lesson, state.index)); on('submit', submitMain); on('submitCheck', submitCheck);
+    on('retry', () => { const a = record(qCurrent()); a.stage = 'answer'; a.check = null; save(); render(); focusQuestion(); });
+    on('next', () => { if (!completed(qCurrent().id)) return; if (state.index < 11) start(state.lesson, state.index + 1); else changeView('review'); });
+    on('nextLesson', () => state.lesson < 10 ? start(state.lesson + 1) : changeView('records'));
+    on('hint', () => { const a = record(qCurrent()); a.hints = Math.min(3, a.hints + 1); save(); render(); });
+    on('compare', () => { const a = record(qCurrent()); a.compareOpen = !a.compareOpen; save(); render(); });
+    on('method', () => { const q = qCurrent(); $('#methodContent').innerHTML = `<h2>${esc(E.TYPE[q.type].name)}的方法依据</h2><p>${esc(q.source)}</p><p>${esc(q.explanation)}</p><p>${esc(q.checkExplanation)}</p><p>题目构造、检查任务与交互为本项目设计。原文解释操作机制，不提供此新实例。</p>`; $('#methodDialog').showModal(); });
+    on('saveHtml', saveHtml); on('saveHtmlAbout', saveHtml); on('export', exportProgress); on('import', () => $('#importFile').click()); on('reset', () => $('#resetDialog').showModal());
+    const setChange = (id, fn) => { if ($('#' + id)) $('#' + id).onchange = fn; };
+    setChange('lessonSelect', e => start(+e.target.value)); setChange('reviewLesson', e => { state.lesson = +e.target.value; state.index = 0; save(); render(); }); setChange('reviewFilter', e => { reviewFilter = e.target.value; render(); });
+    [['hypothesis', 'note'], ['inspect', 'inspect'], ['comparison', 'reflection']].forEach(([id, key]) => { if ($('#' + id)) $('#' + id).oninput = e => { record(qCurrent())[key] = e.target.value; save(); }; });
+    setChange('importFile', async e => { const file = e.target.files[0]; if (!file) return; try { if (file.size > 2500000) throw Error('进度文件过大'); const data = validate(JSON.parse(await file.text())); state = data; save(); render(); notify('本版进度已导入。'); } catch (err) { notify('未导入：' + err.message); } });
+  }
+  $('#cancelReset').onclick = () => $('#resetDialog').close();
+  $('#confirmReset').onclick = () => { state = initial(); save(); $('#resetDialog').close(); changeView('home'); };
+  $('#closeMethod').onclick = () => $('#methodDialog').close();
+  window.TrainingApp = { get state() { return E.clone(state); }, get view() { return view; }, get current() { return qCurrent(); }, start, changeView, validate, submitMain, submitCheck, render };
+  render();
+})();
+
+</script>
+</body></html>

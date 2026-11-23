@@ -19,7 +19,7 @@ for (const q of E.questions) {
       const global = E.helpers.commonDims(model.vectors);
       const candidates = E.helpers.combinations([0, 1, 2, 3, 4], 3).map(indices => ({ indices, score: E.helpers.commonDims(indices.map(i => model.vectors[i])).filter(d => !global.includes(d)).length }));
       const best = Math.max(...candidates.map(x => x.score));
-      assert.equal(candidates.filter(x => x.score === best).length, 1, q.id + ' multiple class formations'); assertions++;
+      assert.equal(candidates.filter(x => x.score > 0).length, 1, q.id + ' multiple simple class formations'); assertions++;
     } else {
       assert.deepEqual(E.helpers.commonDims(model.vectors).sort(), model.mask.slice().sort(), q.id); assertions++;
     }
@@ -27,7 +27,7 @@ for (const q of E.questions) {
   if (q.type === 'D') {
     const { vectors } = q.model, global = E.helpers.commonDims(vectors);
     const scores = vectors.map((_, i) => E.helpers.commonDims(vectors.filter((_, k) => i !== k)).filter(d => !global.includes(d)).length);
-    assert.equal(scores.filter(x => x === Math.max(...scores)).length, 1, q.id); assertions++;
+    assert.equal(scores.filter(x => x > 0).length, 1, q.id + ' multiple simple exclusions'); assertions++;
   }
   if (q.type === 'C') {
     assert.equal(q.model.labelsGiven, false); assertions++;
@@ -36,10 +36,11 @@ for (const q of E.questions) {
     const [a, b] = q.model.dimensions;
     const locations = q.model.vectors.flat().map((v, i) => v[a] === q.model.probe[a] && v[b] === q.model.probe[b] ? i : -1).filter(x => x >= 0);
     assert.deepEqual(locations, [q.main.answer]); assertions++;
+    assert.ok(q.model.vectors.flat().filter(v => v[a] === q.model.probe[a]).length >= 2, q.id + ' row alone not enough'); assertions++;
+    assert.ok(q.model.vectors.flat().filter(v => v[b] === q.model.probe[b]).length >= 2, q.id + ' column alone not enough'); assertions++;
     const inWrongPlace = q.check.options.map((p, i) => {
       const r = Math.floor((p.position - 1) / q.model.cols.length), c = (p.position - 1) % q.model.cols.length;
       const target = q.model.vectors[r][c];
-      const cardForVector = v => q.mode === 'N' ? { kind: 'number', value: (v[0] + 1) * 100 + (v[1] + 1) * 10 + v[2] + 1 } : q.mode === 'F' ? { kind: 'figure', shape: v[0], color: v[1], count: v[2] + 1, filled: true, rotation: 0, size: 1 } : null;
       if (q.mode === 'V') {
         const val = index => p.card.fields[index][1];
         const mapping = [['木制', '纸制', '金属', '布制'], ['扣式', '拉链', '绳结', '插片'], ['叶标', '云标', '山标', '星标']];
@@ -56,11 +57,30 @@ for (const q of E.questions) {
     assert.deepEqual(restored, q.model.corrected, q.id + ' repair result'); assertions++;
     const wrong = { position: (q.main.answer.position + 1) % restored.length, repair: q.main.answer.repair };
     assert.equal(E.sameResponse(q, wrong), false); assertions++;
+    const evidence = E.repairEvidence(q, q.main.answer);
+    assert.deepEqual(evidence.cards, restored, q.id + ' evidence uses actual repair'); assertions++;
+    assert.equal(evidence.edges.length, 2, q.id + ' check both sides'); assertions++;
+    assert.ok(evidence.edges.every(edge => edge.same), q.id + ' repaired relations'); assertions++;
+    const incorrectReplacement = { position: q.main.answer.position, repair: (q.main.answer.repair + 1) % q.main.options.length };
+    const badEvidence = E.repairEvidence(q, incorrectReplacement);
+    assert.ok(badEvidence.edges.some(edge => !edge.same), q.id + ' incorrect replacement must break an adjacent relation'); assertions++;
+    const misplacedEvidence = E.repairEvidence(q, wrong);
+    const relation = E.helpers.relationalModel(q.mode, q.materialIndex, E.random(q.seed));
+    assert.equal(E.helpers.fitsSequence(misplacedEvidence.cards, relation), false, q.id + ' checking a wrong location cannot fix the whole sequence'); assertions++;
   }
   if (q.type === 'S') {
     assert.equal(q.main.display.cells.at(-1).at(-1), null); assertions++;
     assert.equal(q.check.display.cells[0][0], null); assertions++;
     assert.ok(q.model.complete.length >= 2 && q.model.complete[0].length >= 2); assertions++;
+    const model = E.helpers.systemModel(q.mode, q.materialIndex, E.random(q.seed));
+    for (const [task, position] of [[q.main, q.model.mainPosition], [q.check, q.model.checkPosition]]) {
+      const sets = E.helpers.systemOptionSets(model, task, position);
+      assert.equal(sets.horizontal.length, 2, q.id + ' row-only ambiguity'); assertions++;
+      assert.equal(sets.vertical.length, 2, q.id + ' column-only ambiguity'); assertions++;
+      assert.deepEqual(sets.both, [task.answer], q.id + ' unique intersection'); assertions++;
+      assert.equal(sets.horizontal.filter(i => !sets.vertical.includes(i)).length, 1, q.id + ' row-only distractor'); assertions++;
+      assert.equal(sets.vertical.filter(i => !sets.horizontal.includes(i)).length, 1, q.id + ' column-only distractor'); assertions++;
+    }
   }
 }
 console.log(JSON.stringify({ ...report, structuralAssertions: assertions, result: 'PASS' }, null, 2));

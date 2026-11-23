@@ -8,6 +8,7 @@
     else document.querySelector(`[data-option="${response}"]`).click();
   };
   localStorage.removeItem('klauer-method-v2');
+  A.changeView('records'); document.getElementById('reset').click(); document.getElementById('confirmReset').click();
   const visited = [];
   for (const lesson of E.LESSONS) {
     for (let i = 0; i < lesson.items.length; i++) {
@@ -16,6 +17,7 @@
       test(document.querySelectorAll('[data-option]').length === q.main.options.length, q.id + ' main options');
       test(!document.querySelector('.feedback'), q.id + ' no explanation before answer');
       test(!document.getElementById('page').textContent.includes(q.explanation), q.id + ' hidden rule');
+      test(!document.querySelector('.question-number').textContent.includes(q.id), q.id + ' no category-coded learner number');
       if (q.type === 'C') test(!document.querySelector('#questionCard th'), q.id + ' unlabelled grid');
       choose(q, q.main.answer);
       const before = A.state.answers[q.id];
@@ -25,6 +27,11 @@
       test(E.sameResponse(q, A.state.answers[q.id].first), q.id + ' first saved');
       test(!document.getElementById('page').textContent.includes(q.explanation), q.id + ' no rule during check');
       test(document.querySelectorAll('[data-check]').length === q.check.options.length, q.id + ' check options');
+      if (q.type === 'F') {
+        const evidence = E.repairEvidence(q, q.main.answer);
+        for (let edge = 0; edge < evidence.edges.length; edge++) document.querySelector(`[data-edge="${edge}"][data-same="${evidence.edges[edge].same}"]`).click();
+        test(evidence.edges.length === 2, q.id + ' learner checks both repair edges');
+      }
       document.querySelector(`[data-check="${q.check.answer}"]`).click();
       document.getElementById('submitCheck').click();
       test(A.state.answers[q.id].stage === 'done', q.id + ' completes both operations');
@@ -51,5 +58,6 @@
   test(document.getElementById('page').textContent.includes('120/120'), 'report complete');
   A.changeView('about');
   test(document.getElementById('page').textContent.includes('第91页'), 'method evidence');
-  return JSON.stringify({ result: 'PASS', questions: visited.length, assertions, completed: Object.values(saved.answers).filter(a => a.stage === 'done').length });
+  window.__fullFlowResult = { result: 'PASS', questions: visited.length, assertions, completed: Object.values(saved.answers).filter(a => a.stage === 'done').length };
+  return JSON.stringify(window.__fullFlowResult);
 })()

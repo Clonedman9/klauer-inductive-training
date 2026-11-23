@@ -5,7 +5,7 @@
   else root.KlauerEngine = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
-  const VERSION = '2.0.0';
+  const VERSION = '2.1.0';
   const TYPES = [
     { id: 'G', name: '概括', branch: '属性', operation: '寻找相同', source: '2008，表1：Class formation / Class expansion / Finding common attributes' },
     { id: 'D', name: '辨别', branch: '属性', operation: '寻找不同', source: '2008，表1：Identifying disturbing items' },
@@ -110,12 +110,12 @@
         const records = rng.shuffle(members.map(v => ({ v, yes: true })).concat(rest.map(v => ({ v, yes: false }))));
         const vecs = records.map(x => x.v), global = commonDims(vecs);
         const scored = combinations([0, 1, 2, 3, 4], 3).map(indices => ({ indices, score: commonDims(indices.map(i => vecs[i])).filter(d => !global.includes(d)).length }));
-        const best = Math.max(...scored.map(x => x.score)), winners = scored.filter(x => x.score === best);
+        const best = Math.max(...scored.map(x => x.score)), winners = scored.filter(x => x.score > 0);
         if (best > 0 && winners.length === 1 && winners[0].indices.every(i => records[i].yes)) found = { vecs, expected: winners[0].indices, winners, best };
       }
       assert(found, 'Group formation uniqueness');
       evidence = found.expected.map(i => attrCard(mode, found.vecs[i]));
-      main = { kind: 'group', prompt: '哪三张最能组成一组？比较画面中的特点，把共同特征最集中的三张选出来。', options: found.vecs.map(v => attrCard(mode, v)), answer: found.expected };
+      main = { kind: 'group', prompt: '哪三张可以组成一组？比较画面中相同的特点，找出共享某一特点的三张。', options: found.vecs.map(v => attrCard(mode, v)), answer: found.expected };
       model = { family: 'class-formation', vectors: found.vecs, mask, target, expected: found.expected, bestScore: found.best };
     } else {
       let examples;
@@ -143,7 +143,7 @@
       const records = rng.shuffle(normal.map(v => ({ v, odd: false })).concat([{ v: odd, odd: true }]));
       const vecs = records.map(x => x.v), global = commonDims(vecs);
       const scores = vecs.map((_, i) => commonDims(vecs.filter((_, k) => k !== i)).filter(d => !global.includes(d)).length);
-      const max = Math.max(...scores), win = scores.map((v, i) => v === max ? i : -1).filter(i => i >= 0);
+      const max = Math.max(...scores), win = scores.map((v, i) => v > 0 ? i : -1).filter(i => i >= 0);
       if (max > 0 && win.length === 1 && records[win[0]].odd) found = { vecs, answer: win[0] };
     }
     assert(found, 'Discrimination uniqueness');
@@ -221,7 +221,7 @@
   }
   function inverseCheck(model, rng) {
     const before = model.make(), after = model.apply(before);
-    return { kind: 'choice', prompt: '用另一组材料反向检查：下方是变化后的结果，哪张是变化之前的样子？', display: { kind: 'result', card: after }, ...choices(before, model.distractors(before), rng), before, after };
+    return { kind: 'choice', prompt: '用另一组材料逆向还原：下方是变化后的结果，哪张是变化之前的样子？', display: { kind: 'result', card: after }, ...choices(before, model.distractors(before), rng), before, after, method: 'inverse-restoration' };
   }
   function buildR(mode, j, rng) {
     const model = relationalModel(mode, j, rng), useSequence = j % 2 === 1 && !(mode === 'V' && j % 7 === 2);
@@ -238,7 +238,7 @@
       main = { kind: 'choice', prompt: '前两组遵循同一种变化。把这条联系用于第三组，应该得到哪张？', display: { kind: 'analogy', pairs, probe }, ...choices(answer, model.distractors(answer), rng) };
     }
     const check = inverseCheck(model, rng);
-    return { main, check, explanation: '可统一解释已知材料的变化是：' + model.describe + '。把同一变化用于新对象，即得到相应结果。', checkExplanation: '反向操作应能还原变化之前的对象。只对上某一个例子还不够，需要让所有例子通过同一种关系的检验。', model: { family: model.family, process: 'same-relation', describe: model.describe }, verify: () => equal(model.inverse(model.apply(check.before)), check.before) && equal(check.options[check.answer], check.before) };
+    return { main, check, explanation: '可统一解释已知材料的变化是：' + model.describe + '。把同一变化用于新对象，即得到相应结果。', checkExplanation: '这里采用本项目设计的逆向还原查验：把刚才的变化倒过来，检查能否还原原对象。它补充了同一关系的检验，不代表原文所说相反比较的唯一形式。', model: { family: model.family, process: 'same-relation', describe: model.describe }, verify: () => equal(model.inverse(model.apply(check.before)), check.before) && equal(check.options[check.answer], check.before) };
   }
   function fitsSequence(cards, model) { return cards.slice(1).every((x, i) => equal(x, model.apply(cards[i]))); }
   function buildF(mode, j, rng) {
@@ -257,46 +257,113 @@
     assert(validLocations.length === 1 && validLocations[0] === position, 'Disturbed sequence must have one repair location');
     const main = { kind: 'repair', prompt: '序列中只有一项破坏了其余项的变化。先指出位置，再选择替换卡片，把整条序列修好。', display: { kind: 'sequence', cards: disturbed }, options: repair.options, answer: { position, repair: repair.answer } };
     const check = inverseCheck(model, rng);
-    return { main, check, explanation: '整条序列应当' + model.describe + '。第' + (position + 1) + '项破坏了这一联系；用所示正确卡片替换后，每一段相邻关系都恢复一致。', checkExplanation: '修复不仅要让错误项看起来合适，还要同时接上前、后两段关系。再用另一组材料做逆向还原，检验你使用的是否为同一条规律。', model: { family: model.family, process: 'locate-and-repair', corrected, disturbed, position }, verify: () => fitsSequence(corrected, model) && !fitsSequence(disturbed, model) && validLocations.length === 1 && equal(model.inverse(model.apply(check.before)), check.before) };
+    return { main, check, explanation: '整条序列应当' + model.describe + '。第' + (position + 1) + '项破坏了这一联系；用所示正确卡片替换后，每一段相邻关系都恢复一致。', checkExplanation: '先把你选择的替换卡代回原序列，实际判断它两侧的关系是否和其他位置一致；再用新材料作逆向还原。局部关系核验与逆向还原都是本项目的具体检查实现，不代表原文只允许一种检查形式。', model: { family: model.family, process: 'locate-and-repair', corrected, disturbed, position }, verify: () => fitsSequence(corrected, model) && !fitsSequence(disturbed, model) && validLocations.length === 1 && equal(model.inverse(model.apply(check.before)), check.before) };
   }
+  // Independent row and column components prevent solving a system item from one direction alone.
   function systemModel(mode, j, rng) {
+    const rows = 3, cols = 3;
     if (mode === 'N') {
-      const down = 3 + rng.int(7), right = 1 + rng.int(5), family = j >= 4 ? 'scaled' : 'additive', factor = 2;
+      const h = j % 3 === 1 ? { a: 2, b: j >= 4 ? 1 : 0 } : { a: 1, b: 1 + rng.int(4) };
+      const v = j % 3 === 2 ? { a: 2, b: 0 } : { a: 1, b: j % 2 ? 2 + rng.int(4) : -(1 + rng.int(3)) };
+      const iterate = (start, rule, times) => { let x = start; for (let k = 0; k < times; k++) x = x * rule.a + rule.b; return x; };
+      const describe = rule => rule.a === 1 ? (rule.b > 0 ? '加' : '减') + Math.abs(rule.b) : '乘' + rule.a + (rule.b ? '再加' + rule.b : '');
       return {
-        family: 'numeric-system-' + family, rows: 3, cols: 3,
-        make: () => 2 + rng.int(12),
-        cell: (base, r, c) => num(family === 'scaled' ? (base + r * down) * factor ** c : base + r * down + c * right),
-        distractors: x => [num(x.value + 1), num(x.value - 1), num(x.value + down), num(x.value + right + 2)],
-        describe: family === 'scaled' ? '横向每步乘2；首列纵向每步加' + down + '，后续列的纵向增量也随横向倍数改变' : '横向每步加' + right + '，纵向每步加' + down,
-        checkGrid: cells => cells.every((line, r) => line.every((card, c) => (c === 0 || card.value === (family === 'scaled' ? line[c - 1].value * factor : line[c - 1].value + right)) && (r === 0 || card.value - cells[r - 1][c].value === (family === 'scaled' ? down * factor ** c : down))))
+        family: 'joint-number-pairs', rows, cols,
+        horizontal: { component: 'first', ...h }, vertical: { component: 'second', ...v },
+        board() {
+          const rowBases = rng.shuffle([3, 5, 7, 9, 11, 13]).slice(0, rows), colBases = rng.shuffle([12, 15, 18, 21, 24, 27]).slice(0, cols);
+          return Array.from({ length: rows }, (_, r) => Array.from({ length: cols }, (_, c) => ({ kind: 'number-pair', values: [iterate(rowBases[r], h, c), iterate(colBases[c], v, r)] })));
+        },
+        hValue: x => x.values[0], vValue: x => x.values[1],
+        hForward: x => x * h.a + h.b, hBackward: x => (x - h.b) / h.a,
+        vForward: x => x * v.a + v.b, vBackward: x => (x - v.b) / v.a,
+        perturbH: x => ({ ...clone(x), values: [x.values[0] + 1, x.values[1]] }),
+        perturbV: x => ({ ...clone(x), values: [x.values[0], x.values[1] + 1] }),
+        describe: '横向比较每格的甲数，每步' + describe(h) + '；纵向比较每格的乙数，每步' + describe(v) + '。两条线约束不同部分，必须联合使用'
       };
     }
     if (mode === 'V') {
       const pre = PREFIXES[(j + 2) % PREFIXES.length], suf = SUFFIXES[(j + 1) % SUFFIXES.length];
-      return { family: 'word-two-transformations', rows: j >= 4 ? 3 : 2, cols: j % 2 ? 3 : 2, make: () => WORDS[rng.int(WORDS.length)],
-        cell: (base, r, c) => word(pre.repeat(c) + base + suf.repeat(r)),
-        distractors: x => [word(pre + x.text), word(x.text + suf), word(x.text.slice(1)), word(x.text.slice(0, -1)), word(pre + x.text + suf)],
-        describe: '向右每步在最前面加「' + pre + '」，向下每步在最后加「' + suf + '」',
-        checkGrid: cells => cells.every((line, r) => line.every((card, c) => (c === 0 || card.text === pre + line[c - 1].text) && (r === 0 || card.text === cells[r - 1][c].text + suf))) };
+      const hKind = j % 3, vKind = (j + 1) % 3;
+      const reverse = text => Array.from(text).reverse().join('');
+      const rotate = text => text.slice(1) + text[0], unrotate = text => text.at(-1) + text.slice(0, -1);
+      const hForward = text => hKind === 0 ? pre + text : hKind === 1 ? text + pre : rotate(text);
+      const hBackward = text => hKind === 0 ? text.slice(1) : hKind === 1 ? text.slice(0, -1) : unrotate(text);
+      const vForward = text => vKind === 0 ? suf + text : vKind === 1 ? text + suf : reverse(text);
+      const vBackward = text => vKind === 0 ? text.slice(1) : vKind === 1 ? text.slice(0, -1) : reverse(text);
+      const iterate = (start, fn, count) => { let result = start; for (let k = 0; k < count; k++) result = fn(result); return result; };
+      return {
+        family: 'joint-word-pairs', rows, cols,
+        horizontal: { component: 'first', kind: hKind, symbol: pre }, vertical: { component: 'second', kind: vKind, symbol: suf },
+        board() {
+          const rowBases = rng.shuffle(WORDS).slice(0, rows), colBases = rng.shuffle(WORDS).slice(0, cols);
+          return Array.from({ length: rows }, (_, r) => Array.from({ length: cols }, (_, c) => ({ kind: 'word-pair', parts: [iterate(rowBases[r], hForward, c), iterate(colBases[c], vForward, r)] })));
+        },
+        hValue: x => x.parts[0], vValue: x => x.parts[1], hForward, hBackward, vForward, vBackward,
+        perturbH: x => ({ ...clone(x), parts: [hForward(x.parts[0]), x.parts[1]] }),
+        perturbV: x => ({ ...clone(x), parts: [x.parts[0], vForward(x.parts[1])] }),
+        describe: '横向只比较甲字片：' + ['在前面加「' + pre + '」', '在后面加「' + pre + '」', '把最前面的字符移到最后'][hKind] + '；纵向只比较乙字片：' + ['在前面加「' + suf + '」', '在后面加「' + suf + '」', '把字符次序反过来'][vKind] + '。只看一条线不能确定另一片的结果'
+      };
     }
-    const family = j % 3, rows = j >= 4 ? 3 : 2, cols = j % 2 ? 3 : 2;
-    return { family: 'figure-two-transformations-' + family, rows, cols,
-      make: () => ({ kind: 'figure', shape: family === 0 ? 4 : rng.int(4), color: rng.int(4), count: 1 + rng.int(2), filled: true, rotation: rng.int(4), size: 1 }),
-      cell: (base, r, c) => { const out = clone(base); if (family === 0) { out.count += r; out.rotation = mod(out.rotation + c, 4); } if (family === 1) { out.count += c; out.size += r; } if (family === 2) { out.count += c; out.filled = r % 2 ? !out.filled : out.filled; } return out; },
-      distractors: x => [{ ...x, count: x.count + 1 }, { ...x, count: Math.max(1, x.count - 1) }, family === 0 ? { ...x, rotation: mod(x.rotation + 1, 4) } : family === 1 ? { ...x, size: x.size === 1 ? 2 : 1 } : { ...x, filled: !x.filled }, { ...x, count: x.count + 2 }],
-      describe: ['向右每步顺时针旋转90°，向下每步增加一个箭头', '向右每步增加一个图形，向下每步把每个图形增大一级', '向右每步增加一个图形，向下每步交换实心与空心'][family],
-      checkGrid: cells => cells.every((line, r) => line.every((card, c) => { if (c) { const prev = line[c - 1]; if (family === 0 && (card.rotation !== mod(prev.rotation + 1, 4) || card.count !== prev.count)) return false; if (family !== 0 && card.count !== prev.count + 1) return false; } if (r) { const prev = cells[r - 1][c]; if (family === 0 && (card.count !== prev.count + 1 || card.rotation !== prev.rotation)) return false; if (family === 1 && (card.size !== prev.size + 1 || card.count !== prev.count)) return false; if (family === 2 && (card.filled === prev.filled || card.count !== prev.count)) return false; } return true; })) };
+    const family = j % 3, hStep = j >= 4 ? 2 : 1, shape = family === 0 ? 4 : rng.int(4), color = rng.int(4);
+    const verticalComponent = ['rotation', 'size', 'filled'][family];
+    const vForward = x => family === 0 ? mod(x + 1, 4) : family === 1 ? x + 1 : !x;
+    const vBackward = x => family === 0 ? mod(x - 1, 4) : family === 1 ? x - 1 : !x;
+    return {
+      family: 'joint-figure-components-' + family, rows, cols,
+      horizontal: { component: 'count', step: hStep }, vertical: { component: verticalComponent, family },
+      board() {
+        const rowCounts = rng.shuffle([1, 2, 3]).slice(0, rows);
+        const colFeatures = family === 0 ? rng.shuffle([0, 1, 2, 3]).slice(0, cols) : family === 1 ? [1, 1, 1] : rng.shuffle([false, true, false]);
+        return Array.from({ length: rows }, (_, r) => Array.from({ length: cols }, (_, c) => {
+          const card = { kind: 'figure', shape, color, count: rowCounts[r] + c * hStep, filled: true, rotation: 0, size: 1 };
+          let feature = colFeatures[c]; for (let k = 0; k < r; k++) feature = vForward(feature);
+          card[verticalComponent] = feature; return card;
+        }));
+      },
+      hValue: x => x.count, vValue: x => x[verticalComponent],
+      hForward: x => x + hStep, hBackward: x => x - hStep, vForward, vBackward,
+      perturbH: x => ({ ...clone(x), count: x.count + 1 }),
+      perturbV: x => ({ ...clone(x), [verticalComponent]: family === 1 ? (x.size === 3 ? 2 : x.size + 1) : family === 0 ? mod(x.rotation + 1, 4) : !x.filled }),
+      describe: '横向比较图形数量，每步增加' + hStep + '个；纵向比较' + ['箭头方向，每步顺时针转90°', '每个图形的大小，每步增大一级', '填充方式，实心与空心交替'][family] + '。数量关系与纵向变化必须同时满足'
+    };
+  }
+  function systemChecks(model, cells, position, candidate) {
+    const [r, c] = position, horizontal = [], vertical = [];
+    if (c > 0 && cells[r][c - 1]) horizontal.push(equal(model.hValue(candidate), model.hForward(model.hValue(cells[r][c - 1]))));
+    if (c + 1 < cells[r].length && cells[r][c + 1]) horizontal.push(equal(model.hValue(candidate), model.hBackward(model.hValue(cells[r][c + 1]))));
+    if (r > 0 && cells[r - 1][c]) vertical.push(equal(model.vValue(candidate), model.vForward(model.vValue(cells[r - 1][c]))));
+    if (r + 1 < cells.length && cells[r + 1][c]) vertical.push(equal(model.vValue(candidate), model.vBackward(model.vValue(cells[r + 1][c]))));
+    return { horizontal: horizontal.length > 0 && horizontal.every(Boolean), vertical: vertical.length > 0 && vertical.every(Boolean) };
+  }
+  function systemOptionSets(model, task, position) {
+    const scores = task.options.map(card => systemChecks(model, task.display.cells, position, card));
+    return {
+      horizontal: scores.map((s, i) => s.horizontal ? i : -1).filter(i => i >= 0),
+      vertical: scores.map((s, i) => s.vertical ? i : -1).filter(i => i >= 0),
+      both: scores.map((s, i) => s.horizontal && s.vertical ? i : -1).filter(i => i >= 0)
+    };
   }
   function buildS(mode, j, rng) {
-    const model = systemModel(mode, j, rng), base = model.make();
-    const complete = Array.from({ length: model.rows }, (_, r) => Array.from({ length: model.cols }, (_, c) => model.cell(base, r, c)));
-    const mr = model.rows - 1, mc = model.cols - 1, correct = complete[mr][mc], mainCells = clone(complete); mainCells[mr][mc] = null;
-    const main = { kind: 'choice', prompt: '横着看，再竖着看。哪张卡片能让两个方向的联系都成立？', display: { kind: 'grid', cells: mainCells }, ...choices(correct, model.distractors(correct), rng) };
-    let nextBase = model.make(); for (let k = 0; equal(nextBase, base) && k < 80; k++) nextBase = model.make();
-    const second = Array.from({ length: model.rows }, (_, r) => Array.from({ length: model.cols }, (_, c) => model.cell(nextBase, r, c)));
-    const before = second[0][0], checkCells = clone(second); checkCells[0][0] = null;
-    const check = { kind: 'choice', prompt: '换一组材料逆向检查：空格这次在起点。哪张卡片能同时还原两个方向的关系？', display: { kind: 'grid', cells: checkCells }, ...choices(before, model.distractors(before), rng) };
-    return { main, check, explanation: '两个方向分别是：' + model.describe + '。缺项需要同时满足横向与纵向，不能只按一条线作答。', checkExplanation: '检查题更换了起始材料，并把缺项移到起点。把两个方向的变化分别倒过来，必须得到同一张起始卡片。', model: { family: model.family, process: 'joint-relations', complete, reverseComplete: second }, verify: () => model.checkGrid(complete) && model.checkGrid(second) && equal(main.options[main.answer], complete[mr][mc]) && equal(check.options[check.answer], second[0][0]) };
+    const model = systemModel(mode, j, rng), complete = model.board(), reverseComplete = model.board();
+    const mainPosition = [model.rows - 1, model.cols - 1], checkPosition = [0, 0];
+    const makeOptions = correct => choices(correct, [model.perturbH(correct), model.perturbV(correct), model.perturbV(model.perturbH(correct))], rng);
+    const mainCells = clone(complete), checkCells = clone(reverseComplete);
+    const mainCorrect = mainCells[mainPosition[0]][mainPosition[1]], checkCorrect = checkCells[0][0];
+    mainCells[mainPosition[0]][mainPosition[1]] = null; checkCells[0][0] = null;
+    const main = { kind: 'choice', prompt: '比较完整的行与列。哪张卡片能让横向和纵向的联系同时成立？', display: { kind: 'grid', cells: mainCells }, ...makeOptions(mainCorrect) };
+    const check = { kind: 'choice', prompt: '换一组材料，空格移到起点。分别还原两条方向的联系，再选出同时符合的卡片。', display: { kind: 'grid', cells: checkCells }, ...makeOptions(checkCorrect), method: 'joint-inverse-restoration' };
+    const sets = systemOptionSets(model, main, mainPosition), reverseSets = systemOptionSets(model, check, checkPosition);
+    const allRelationsHold = cells => cells.every((line, r) => line.every((card, c) => (!c || equal(model.hValue(card), model.hForward(model.hValue(line[c - 1])))) && (!r || equal(model.vValue(card), model.vForward(model.vValue(cells[r - 1][c]))))));
+    const bothNeeded = set => set.horizontal.length === 2 && set.vertical.length === 2 && set.both.length === 1;
+    assert(bothNeeded(sets) && bothNeeded(reverseSets), 'Every system task must require both directions');
+    return {
+      main, check,
+      explanation: '两个方向分别约束卡片的不同部分：' + model.describe + '。有一个干扰项只满足横向，另一个只满足纵向，只有一个答案同时通过。',
+      checkExplanation: '本项目把检查设计为“换材料、逆向还原”：横向与纵向各留有两个候选，必须合并两条证据，才能还原起点。逆向还原是具体教学实现，不等同于原文所有“相反比较”的形式。',
+      model: { family: model.family, process: 'joint-relations', horizontal: model.horizontal, vertical: model.vertical, complete, reverseComplete, mainPosition, checkPosition, optionSets: sets, reverseOptionSets: reverseSets },
+      verify: () => allRelationsHold(complete) && allRelationsHold(reverseComplete) && bothNeeded(systemOptionSets(model, main, mainPosition)) && bothNeeded(systemOptionSets(model, check, checkPosition)) && equal(sets.both, [main.answer]) && equal(reverseSets.both, [check.answer])
+    };
   }
   const builders = { G: buildG, D: buildD, C: buildC, R: buildR, F: buildF, S: buildS };
   const offsets = [0, 0, 1, 1, 2, 2], questions = [], banks = {};
@@ -310,8 +377,17 @@
     }
   });
   const used = Object.fromEntries(TYPES.map(t => [t.id, 0]));
-  LESSONS.forEach(lesson => { const left = lesson.counts.slice(); while (left.some(Boolean)) TYPES.forEach((t, i) => { if (left[i]) { const q = banks[t.id][used[t.id]++]; q.lesson = lesson.n; lesson.items.push(q.id); left[i]--; } }); });
+  LESSONS.forEach(lesson => { const left = lesson.counts.slice(); while (left.some(Boolean)) TYPES.forEach((t, i) => { if (left[i]) { const q = banks[t.id][used[t.id]++]; q.lesson = lesson.n; lesson.items.push(q.id); q.number = (lesson.n - 1) * 12 + lesson.items.length; q.revision = q.type === 'S' ? 2 : 1; left[i]--; } }); });
   const byId = Object.fromEntries(questions.map(q => [q.id, q]));
+  function repairEvidence(q, value) {
+    if (q.type !== 'F' || !validResponse(q, value)) return null;
+    const relation = relationalModel(q.mode, q.materialIndex, random(q.seed));
+    const cards = clone(q.model.disturbed); cards[value.position] = clone(q.main.options[value.repair]);
+    const edges = [];
+    if (value.position > 0) edges.push({ from: value.position - 1, to: value.position, same: equal(relation.apply(cards[value.position - 1]), cards[value.position]) });
+    if (value.position + 1 < cards.length) edges.push({ from: value.position, to: value.position + 1, same: equal(relation.apply(cards[value.position]), cards[value.position + 1]) });
+    return { cards, edges };
+  }
   function sameResponse(q, value) {
     if (q.main.kind === 'group') return Array.isArray(value) && equal(value.slice().sort((a, b) => a - b), q.main.answer.slice().sort((a, b) => a - b));
     if (q.main.kind === 'repair') return value && value.position === q.main.answer.position && value.repair === q.main.answer.repair;
@@ -332,8 +408,9 @@
       const key = JSON.stringify([q.type, q.mode, q.main]); if (fingerprints.has(key)) errors.push(q.id + ':duplicate-of-' + fingerprints.get(key)); fingerprints.set(key, q.id);
       if (q.type === 'C' && (q.main.display.rows || q.main.display.cols || q.model.labelsGiven)) errors.push(q.id + ':classification-labels');
       if (q.type === 'F' && q.main.kind !== 'repair') errors.push(q.id + ':missing-repair');
+      if (q.type === 'S' && ![q.model.optionSets, q.model.reverseOptionSets].every(s => s.horizontal.length === 2 && s.vertical.length === 2 && s.both.length === 1)) errors.push(q.id + ':single-direction-shortcut');
     });
     return { version: VERSION, total: questions.length, types: Object.fromEntries(TYPES.map(t => [t.id, questions.filter(q => q.type === t.id).length])), materials: Object.fromEntries(MODES.map(m => [m, questions.filter(q => q.mode === m).length])), lessons: LESSONS.map(l => l.items.length), unlabelledClassification: questions.filter(q => q.type === 'C' && !q.model.labelsGiven).length, repairs: questions.filter(q => q.main.kind === 'repair').length, independentChecks: questions.length, errors };
   }
-  return { VERSION, TYPES, TYPE, MODES, MODE_NAMES, LESSONS, questions, byId, sameResponse, validResponse, validCheck, audit, equal, clone, cardKey, random, attribute, dimension, helpers: { commonDims, matches, combinations, fitsSequence, relationalModel, systemModel } };
+  return { VERSION, TYPES, TYPE, MODES, MODE_NAMES, LESSONS, questions, byId, sameResponse, validResponse, validCheck, repairEvidence, audit, equal, clone, cardKey, random, attribute, dimension, helpers: { commonDims, matches, combinations, fitsSequence, relationalModel, systemModel, systemChecks, systemOptionSets } };
 });
